@@ -4,6 +4,7 @@ using GenshinPray.Exceptions;
 using GenshinPray.Models;
 using GenshinPray.Models.DTO;
 using GenshinPray.Models.PO;
+using GenshinPray.Service;
 using GenshinPray.Service.PrayService;
 using GenshinPray.Type;
 using GenshinPray.Util;
@@ -18,6 +19,12 @@ namespace GenshinPray.Controllers.Api
     [Route("api/[controller]/[action]")]
     public class FullRolePrayController : BasePrayController<FullRolePrayService>
     {
+        public FullRolePrayController(FullRolePrayService fullRolePrayService, AuthorizeService authorizeService, MemberService memberService,
+            GoodsService goodsService, PrayRecordService prayRecordService, MemberGoodsService memberGoodsService)
+            : base(fullRolePrayService, authorizeService, memberService, goodsService, prayRecordService, memberGoodsService)
+        {
+        }
+
         /// <summary>
         /// 单抽角色祈愿池
         /// </summary>
@@ -28,7 +35,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="imgWidth"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(prayTimesLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PrayLimit.Yes })]
         public ApiResult PrayOne([FromForm] AuthorizeDTO authorize, string memberCode, string memberName = "", bool toBase64 = false, int imgWidth = 0)
         {
             try
@@ -80,7 +87,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="imgWidth"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(prayTimesLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PrayLimit.Yes })]
         public ApiResult PrayTen([FromForm] AuthorizeDTO authorize, string memberCode, string memberName = "", bool toBase64 = false, int imgWidth = 0)
         {
             try

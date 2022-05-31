@@ -13,13 +13,13 @@ namespace GenshinPray.Service
     {
         private GoodsDao goodsDao;
         private PondGoodsDao pondGoodsDao;
-        private AuthorizeDAO authorizeDao;
+        private AuthorizeDao authorizeDao;
 
-        public GoodsService()
+        public GoodsService(GoodsDao goodsDao, PondGoodsDao pondGoodsDao, AuthorizeDao authorizeDao)
         {
-            this.goodsDao = new GoodsDao();
-            this.pondGoodsDao = new PondGoodsDao();
-            this.authorizeDao = new AuthorizeDAO();
+            this.goodsDao = goodsDao;
+            this.pondGoodsDao = pondGoodsDao;
+            this.authorizeDao = authorizeDao;
         }
 
         /// <summary>

@@ -18,10 +18,12 @@ namespace GenshinPray.Service.PrayService
         protected MemberDao memberDao;
         protected GoodsDao goodsDao;
 
-        public BasePrayService()
+        public BasePrayService() { }
+
+        public BasePrayService(MemberDao memberDao, GoodsDao goodsDao)
         {
-            this.memberDao = new MemberDao();
-            this.goodsDao = new GoodsDao();
+            this.memberDao = memberDao;
+            this.goodsDao = goodsDao;
         }
 
         /// <summary>

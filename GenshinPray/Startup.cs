@@ -2,6 +2,7 @@ using GenshinPray.Attribute;
 using GenshinPray.Common;
 using GenshinPray.Dao;
 using GenshinPray.Service;
+using GenshinPray.Service.PrayService;
 using GenshinPray.Timer;
 using GenshinPray.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,25 @@ namespace GenshinPray
             });
             new DBClient().CreateDB();
             LogHelper.Info($"数据库初始化完毕...");
+
+
+            //依赖注入
+            services.AddScoped<ArmPrayService, ArmPrayService>();
+            services.AddScoped<PermPrayService, PermPrayService>();
+            services.AddScoped<RolePrayService, RolePrayService>();
+            services.AddScoped<FullArmPrayService, FullArmPrayService>();
+            services.AddScoped<FullRolePrayService, FullRolePrayService>();
+            services.AddScoped<AuthorizeService, AuthorizeService>();
+            services.AddScoped<GoodsService, GoodsService>();
+            services.AddScoped<MemberGoodsService, MemberGoodsService>();
+            services.AddScoped<MemberService, MemberService>();
+            services.AddScoped<PrayRecordService, PrayRecordService>();
+            services.AddScoped<AuthorizeDao, AuthorizeDao>();
+            services.AddScoped<GoodsDao, GoodsDao>();
+            services.AddScoped<MemberDao, MemberDao>();
+            services.AddScoped<MemberGoodsDao, MemberGoodsDao>();
+            services.AddScoped<PondGoodsDao, PondGoodsDao>();
+            services.AddScoped<PrayRecordDao, PrayRecordDao>();
 
             //controller
             services.AddControllers();
@@ -109,7 +129,10 @@ namespace GenshinPray
             });
 
             //加载默认蛋池数据到内存
-            new GoodsService().LoadYSPrayItem(); 
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<GoodsService>().LoadYSPrayItem();
+            }
         }
 
         //将配置文件中的信息加载到内存

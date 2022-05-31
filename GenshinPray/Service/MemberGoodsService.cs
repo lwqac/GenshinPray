@@ -16,9 +16,9 @@ namespace GenshinPray.Service
     {
         private MemberGoodsDao memberGoodsDao;
 
-        public MemberGoodsService()
+        public MemberGoodsService(MemberGoodsDao memberGoodsDao)
         {
-            this.memberGoodsDao = new MemberGoodsDao();
+            this.memberGoodsDao = memberGoodsDao;
         }
 
         public void AddMemberGoods(YSPrayResult ySPrayResult, List<MemberGoodsDTO> memberGoods, YSPondType pondType, int authId, string memberCode)

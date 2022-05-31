@@ -3,18 +3,22 @@ using GenshinPray.Exceptions;
 using GenshinPray.Models;
 using GenshinPray.Models.DTO;
 using GenshinPray.Models.PO;
-using GenshinPray.Service.PrayService;
 using GenshinPray.Type;
 using GenshinPray.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GenshinPray.Service.PrayService
 {
     public class ArmPrayService : BasePrayService
     {
+        public ArmPrayService() { }
+
+        public ArmPrayService(MemberDao memberDao, GoodsDao goodsDao) : base(memberDao, goodsDao)
+        {
+            this.memberDao = memberDao;
+            this.goodsDao = goodsDao;
+        }
 
         /// <summary>
         /// 无保底情况下单抽物品概率

@@ -11,9 +11,9 @@ namespace GenshinPray.Service
     {
         private PrayRecordDao prayRecordDao;
 
-        public PrayRecordService()
+        public PrayRecordService(PrayRecordDao prayRecordDao)
         {
-            this.prayRecordDao = new PrayRecordDao();
+            this.prayRecordDao = prayRecordDao;
         }
 
         public int GetPrayTimesToday(int authId)

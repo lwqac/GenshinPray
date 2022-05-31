@@ -3,13 +3,11 @@ using GenshinPray.Models;
 using GenshinPray.Models.DTO;
 using GenshinPray.Models.PO;
 using GenshinPray.Service;
+using GenshinPray.Type;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace GenshinPray.Attribute
 {
@@ -17,16 +15,16 @@ namespace GenshinPray.Attribute
     {
         private AuthorizeService authorizeService;
         private PrayRecordService prayRecordService;
-        private bool PrayLimit = false;
-        private bool PublicLimit = false;
+        private PrayLimit PrayLimit = PrayLimit.No;
+        private PublicLimit PublicLimit = PublicLimit.No;
 
 
-        public AuthorizeAttribute(bool prayTimesLimit = false, bool publicLimit = false)
+        public AuthorizeAttribute(AuthorizeService authorizeService, PrayRecordService prayRecordService , PrayLimit prayLimit = PrayLimit.No, PublicLimit publicLimit = PublicLimit.No)
         {
-            this.authorizeService = new AuthorizeService();
-            this.prayRecordService = new PrayRecordService();
+            this.authorizeService = authorizeService;
+            this.prayRecordService = prayRecordService;
+            this.PrayLimit = prayLimit;
             this.PublicLimit = publicLimit;
-            this.PrayLimit = prayTimesLimit;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -48,7 +46,7 @@ namespace GenshinPray.Attribute
                 context.Result = new JsonResult(ApiResult.Unauthorized);
                 return;
             }
-            if (PublicLimit && authCode == SiteConfig.PublicAuthCode)
+            if (PublicLimit == PublicLimit.Yes && authCode == SiteConfig.PublicAuthCode)
             {
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -56,7 +54,7 @@ namespace GenshinPray.Attribute
                 return;
             }
             int prayTimesToday = prayRecordService.GetPrayTimesToday(authorizePO.Id);
-            if (PrayLimit && prayTimesToday >= authorizePO.DailyCall)
+            if (PrayLimit == PrayLimit.Yes && prayTimesToday >= authorizePO.DailyCall)
             {
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;

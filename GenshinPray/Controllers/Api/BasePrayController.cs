@@ -14,14 +14,15 @@ namespace GenshinPray.Controllers.Api
         protected MemberGoodsService memberGoodsService;
         protected static readonly object PrayLock = new object();
 
-        public BasePrayController()
+        public BasePrayController(T t, AuthorizeService authorizeService, MemberService memberService,
+            GoodsService goodsService, PrayRecordService prayRecordService, MemberGoodsService memberGoodsService)
         {
-            this.basePrayService = new T();
-            this.authorizeService = new AuthorizeService();
-            this.memberService = new MemberService();
-            this.goodsService = new GoodsService();
-            this.prayRecordService = new PrayRecordService();
-            this.memberGoodsService = new MemberGoodsService();
+            this.basePrayService = t;
+            this.authorizeService = authorizeService;
+            this.memberService = memberService;
+            this.goodsService = goodsService;
+            this.prayRecordService = prayRecordService;
+            this.memberGoodsService = memberGoodsService;
         }
 
         protected void CheckImgWidth(int imgWidth)

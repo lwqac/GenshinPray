@@ -1,4 +1,5 @@
-﻿using GenshinPray.Exceptions;
+﻿using GenshinPray.Dao;
+using GenshinPray.Exceptions;
 using GenshinPray.Models;
 using GenshinPray.Models.DTO;
 using GenshinPray.Models.PO;
@@ -12,6 +13,14 @@ namespace GenshinPray.Service.PrayService
 {
     public class RolePrayService : BasePrayService
     {
+        public RolePrayService() { }
+
+        public RolePrayService(MemberDao memberDao, GoodsDao goodsDao) : base(memberDao, goodsDao)
+        {
+            this.memberDao = memberDao;
+            this.goodsDao = goodsDao;
+        }
+
         /// <summary>
         /// 无保底情况下单抽物品概率
         /// </summary>
@@ -139,7 +148,7 @@ namespace GenshinPray.Service.PrayService
 
             memberInfo.RolePrayTimes += prayCount;
             memberInfo.TotalPrayTimes += prayCount;
-            
+
             ysPrayResult.MemberInfo = memberInfo;
             ysPrayResult.Authorize = authorize;
             ysPrayResult.PrayRecords = prayRecords;

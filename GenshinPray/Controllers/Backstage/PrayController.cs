@@ -16,7 +16,7 @@ namespace GenshinPray.Controllers.Backstage
         [Authorize]
         public IActionResult PondInfo(string authCode)
         {
-            return Ok(ApiResult.Success(""));
+            return Ok(ApiResult.Success());
         }
 
     }

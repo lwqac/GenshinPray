@@ -24,11 +24,11 @@ namespace GenshinPray.Controllers.Api
         protected GoodsService goodsService;
         protected MemberGoodsService memberGoodsService;
 
-        public PrayInfoController()
+        public PrayInfoController(MemberService memberService, GoodsService goodsService, MemberGoodsService memberGoodsService)
         {
-            this.memberService = new MemberService();
-            this.goodsService = new GoodsService();
-            this.memberGoodsService = new MemberGoodsService();
+            this.memberService = memberService;
+            this.goodsService = goodsService;
+            this.memberGoodsService = memberGoodsService;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="authorize"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [TypeFilter(typeof(AuthorizeAttribute))]
         public ApiResult GetPondInfo([FromForm] AuthorizeDTO authorize)
         {
             try
@@ -97,7 +97,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="memberCode"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [TypeFilter(typeof(AuthorizeAttribute))]
         public ApiResult GetMemberPrayDetail([FromForm] AuthorizeDTO authorize, string memberCode)
         {
             try
@@ -157,7 +157,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="authorize"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [TypeFilter(typeof(AuthorizeAttribute))]
         public ApiResult GetLuckRanking([FromForm] AuthorizeDTO authorize)
         {
             try
@@ -190,7 +190,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [HttpPost]
-        [Authorize]
+        [TypeFilter(typeof(AuthorizeAttribute))]
         public ApiResult SetMemberAssign([FromForm] AuthorizeDTO authorize, string memberCode, string goodsName, string memberName = "")
         {
             try
@@ -229,7 +229,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="memberCode"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [TypeFilter(typeof(AuthorizeAttribute))]
         public ApiResult GetMemberAssign([FromForm] AuthorizeDTO authorize, string memberCode)
         {
             try
@@ -268,7 +268,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="memberCode"></param>
         /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        [TypeFilter(typeof(AuthorizeAttribute))]
         public ApiResult GetMemberPrayRecords([FromForm] AuthorizeDTO authorize, string memberCode)
         {
             try
@@ -323,7 +323,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="rolePond"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(publicLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
         public ApiResult SetRolePond([FromForm] AuthorizeDTO authorize, [FromBody] RolePondDto rolePond)
         {
             try
@@ -373,7 +373,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="armPond"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(publicLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
         public ApiResult SetArmPond([FromForm] AuthorizeDTO authorize, [FromBody] ArmPondDTO armPond)
         {
             try
@@ -422,7 +422,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="authorize"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(publicLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
         public ApiResult ResetRolePond([FromForm] AuthorizeDTO authorize)
         {
             try
@@ -449,7 +449,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="authorize"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(publicLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
         public ApiResult ResetArmPond([FromForm] AuthorizeDTO authorize)
         {
             try
@@ -477,7 +477,7 @@ namespace GenshinPray.Controllers.Api
         /// <param name="rare">0~100</param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(publicLimit: true)]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
         public ApiResult SetSkinRate([FromForm] AuthorizeDTO authorize, int rare)
         {
             try

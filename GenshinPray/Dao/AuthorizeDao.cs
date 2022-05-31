@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GenshinPray.Dao
 {
-    public class AuthorizeDAO : DbContext<AuthorizePO>
+    public class AuthorizeDao : DbContext<AuthorizePO>
     {
         public AuthorizePO GetAuthorize(string code)
         {

@@ -9,11 +9,11 @@ namespace GenshinPray.Service
 {
     public class AuthorizeService : BaseService
     {
-        private AuthorizeDAO authorizeDao;
+        private AuthorizeDao authorizeDao;
 
-        public AuthorizeService()
+        public AuthorizeService(AuthorizeDao authorizeDao)
         {
-            this.authorizeDao = new AuthorizeDAO();
+            this.authorizeDao = authorizeDao;
         }
 
         public AuthorizePO GetAuthorize(string code)

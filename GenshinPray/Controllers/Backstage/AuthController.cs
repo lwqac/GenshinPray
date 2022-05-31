@@ -16,7 +16,7 @@ namespace GenshinPray.Controllers.Backstage
         [Authorize]
         public IActionResult ApplyAuth(int userId, int type)
         {
-            return Ok(ApiResult.Success(123));
+            return Ok(ApiResult.Success());
         }
 
     }

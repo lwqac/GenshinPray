@@ -12,9 +12,9 @@ namespace GenshinPray.Service
     {
         private MemberDao memberDao;
 
-        public MemberService()
+        public MemberService(MemberDao memberDao)
         {
-            this.memberDao = new MemberDao();
+            this.memberDao = memberDao;
         }
 
         /// <summary>
