@@ -113,7 +113,7 @@ namespace GenshinPray.Util
             Font nameFont = new Font(FontName, 45, FontStyle.Bold);
             StringFormat format = StringFormat.GenericTypographic;
             RectangleF rect = new RectangleF(194, 576, 600, 200);
-            float size = bgGraphics.DpiY * nameFont.SizeInPoints / 72; ;
+            float size = bgGraphics.DpiY * nameFont.SizeInPoints / 72;
             path.AddString(goodsItem.GoodsName, nameFont.FontFamily, (int)nameFont.Style, size, rect, format);
             bgGraphics.SmoothingMode = SmoothingMode.AntiAlias;
             bgGraphics.DrawPath(new Pen(Color.Black, 2), path);
@@ -122,23 +122,11 @@ namespace GenshinPray.Util
 
         private static void drawRoleStar(Graphics bgGraphics, YSGoodsItem goodsItem)
         {
-            int starCount = 0;
             int starWidth = 34;
             int starHeight = 34;
             int indexX = 200;
             int indexY = 663;
-            if (goodsItem.RareType == YSRareType.五星)
-            {
-                starCount = 5;
-            }
-            else if (goodsItem.RareType == YSRareType.四星)
-            {
-                starCount = 4;
-            }
-            else if (goodsItem.RareType == YSRareType.三星)
-            {
-                starCount = 3;
-            }
+            int starCount = goodsItem.RareType.getStarCount();
             using Image imgStar = new Bitmap(FilePath.getYSStarPath());
             for (int i = 0; i < starCount; i++)
             {
@@ -203,23 +191,11 @@ namespace GenshinPray.Util
 
         private static void drawEquipStar(Graphics bgGraphics, YSGoodsItem goodsItem)
         {
-            int starCount = 0;
             int starWidth = 34;
             int starHeight = 34;
             int indexX = 190;
             int indexY = 643;
-            if (goodsItem.RareType == YSRareType.五星)
-            {
-                starCount = 5;
-            }
-            else if (goodsItem.RareType == YSRareType.四星)
-            {
-                starCount = 4;
-            }
-            else if (goodsItem.RareType == YSRareType.三星)
-            {
-                starCount = 3;
-            }
+            int starCount = goodsItem.RareType.getStarCount();
             using Image imgStar = new Bitmap(FilePath.getYSStarPath());
             for (int i = 0; i < starCount; i++)
             {
@@ -244,9 +220,9 @@ namespace GenshinPray.Util
             {
                 int randomWidth = RandomHelper.getRandomBetween(50, 200);
                 int randomXIndex = RandomHelper.getRandomBetween(20, 1900);
-                int randomyIndex = RandomHelper.getRandomBetween(20, 1060);
+                int randomYIndex = RandomHelper.getRandomBetween(20, 1060);
                 Image randomImage = bigImageList[RandomHelper.getRandomBetween(0, bigImageList.Count - 1)];
-                bgGraphics.DrawImage(randomImage, randomXIndex, randomyIndex, randomWidth, randomWidth);
+                bgGraphics.DrawImage(randomImage, randomXIndex, randomYIndex, randomWidth, randomWidth);
             }
 
             int randomSmallCount = new Random().Next(50, 101);
@@ -257,9 +233,9 @@ namespace GenshinPray.Util
             {
                 int randomWidth = RandomHelper.getRandomBetween(5, 15);
                 int randomXIndex = RandomHelper.getRandomBetween(20, 1900);
-                int randomyIndex = RandomHelper.getRandomBetween(20, 1060);
+                int randomYIndex = RandomHelper.getRandomBetween(20, 1060);
                 Image randomImage = smallImageList[RandomHelper.getRandomBetween(0, smallImageList.Count - 1)];
-                bgGraphics.DrawImage(randomImage, randomXIndex, randomyIndex, randomWidth, randomWidth);
+                bgGraphics.DrawImage(randomImage, randomXIndex, randomYIndex, randomWidth, randomWidth);
             }
 
             foreach (var item in bigImageList) item.Dispose();
@@ -349,25 +325,12 @@ namespace GenshinPray.Util
 
         private static void drawStar(Graphics bgGraphics, YSPrayRecord prayRecord, int indexX, int indexY)
         {
-            int starCount = 0;
-            int starWidth = 21;
-            int starHeight = 21;
-
             if (prayRecord.IsNew == false && prayRecord.GoodsItem.GoodsType == YSGoodsType.角色) return;
 
+            int starWidth = 21;
+            int starHeight = 21;
             YSGoodsItem goodsItem = prayRecord.GoodsItem;
-            if (goodsItem.RareType == YSRareType.五星)
-            {
-                starCount = 5;
-            }
-            else if (goodsItem.RareType == YSRareType.四星)
-            {
-                starCount = 4;
-            }
-            else if (goodsItem.RareType == YSRareType.三星)
-            {
-                starCount = 3;
-            }
+            int starCount = goodsItem.RareType.getStarCount();
 
             int indexXAdd = (155 - (starCount * starWidth)) / 2;
             using Image imgStar = new Bitmap(FilePath.getYSStarPath());
@@ -412,6 +375,14 @@ namespace GenshinPray.Util
             bgGraphics.DrawString($"UID：{uid}", uidFont, brushWatermark, 1650, 1042);
         }
 
+
+        private static int getStarCount(this YSRareType rareType)
+        {
+            if (rareType == YSRareType.五星) return 5;
+            if (rareType == YSRareType.四星) return 4;
+            if (rareType == YSRareType.三星) return 3;
+            return 0;
+        }
 
 
     }
