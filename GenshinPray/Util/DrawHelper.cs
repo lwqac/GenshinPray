@@ -345,7 +345,7 @@ namespace GenshinPray.Util
         {
             if (goodsItem.RareType != YSRareType.五星) return;
             using Image imgShading = new Bitmap(FilePath.getYSShadingPath());
-            bgGraphics.DrawImage(imgShading, indexX, indexY + 45, imgShading.Width, imgShading.Height);
+            bgGraphics.DrawImage(imgShading, indexX + 3, indexY + 45, imgShading.Width, imgShading.Height);
         }
 
         private static void drawCloseIcon(Graphics bgGraphics)
