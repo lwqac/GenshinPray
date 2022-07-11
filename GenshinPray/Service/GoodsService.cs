@@ -243,7 +243,7 @@ namespace GenshinPray.Service
         /// <param name="authId"></param>
         /// <param name="memberCode"></param>
         /// <returns></returns>
-        public List<MemberGoodsDTO> GetMemberGoods(int authId, string memberCode)
+        public List<MemberGoodsDto> GetMemberGoods(int authId, string memberCode)
         {
             return goodsDao.GetMemberGoods(authId, memberCode);
         }

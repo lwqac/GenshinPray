@@ -38,39 +38,18 @@ namespace GenshinPray.Service
         public MemberPO GetOrInsert(int authId, string memberCode, string memberName = "")
         {
             MemberPO memberInfo = memberDao.getMember(authId, memberCode);
-            if (memberName != null) memberName = memberName.CutString(20);
+            if (memberName != null)
+            {
+                memberName = memberName.CutString(20);
+            }
             if (memberInfo == null)
             {
-                memberInfo = new MemberPO();
-                memberInfo.MemberCode = memberCode;
-                memberInfo.MemberName = memberName;
-                memberInfo.AuthId = authId;
-                memberInfo.Role180Surplus = 180;
-                memberInfo.Role90Surplus = 90;
-                memberInfo.Role20Surplus = 20;
-                memberInfo.Role10Surplus = 10;
-                memberInfo.Arm80Surplus = 80;
-                memberInfo.Arm20Surplus = 20;
-                memberInfo.Arm10Surplus = 10;
-                memberInfo.Perm90Surplus = 90;
-                memberInfo.Perm10Surplus = 10;
-                memberInfo.FullRole90Surplus = 90;
-                memberInfo.FullRole10Surplus = 10;
-                memberInfo.FullArm80Surplus = 80;
-                memberInfo.FullArm10Surplus = 90;
+                memberInfo = new MemberPO(authId, memberCode, memberName);
                 return memberDao.Insert(memberInfo);
             }
             if (string.IsNullOrEmpty(memberName) == false && memberInfo.MemberName != memberName)
             {
                 memberInfo.MemberName = memberName;
-                memberDao.Update(memberInfo);
-            }
-            if (memberInfo.FullRole90Surplus + memberInfo.FullRole10Surplus + memberInfo.FullArm80Surplus + memberInfo.FullArm10Surplus == 0)
-            {
-                memberInfo.FullRole90Surplus = 90;
-                memberInfo.FullRole10Surplus = 10;
-                memberInfo.FullArm80Surplus = 80;
-                memberInfo.FullArm10Surplus = 90;
                 memberDao.Update(memberInfo);
             }
             return memberInfo;

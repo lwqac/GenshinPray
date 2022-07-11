@@ -38,7 +38,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetPondInfo([FromForm] AuthorizeDTO authorize)
+        public ApiResult GetPondInfo([FromForm] AuthorizeDto authorize)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetMemberPrayDetail([FromForm] AuthorizeDTO authorize, string memberCode)
+        public ApiResult GetMemberPrayDetail([FromForm] AuthorizeDto authorize, string memberCode)
         {
             try
             {
@@ -106,37 +106,37 @@ namespace GenshinPray.Controllers.Api
                 AuthorizePO authorizePO = authorize.AuthorizePO;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null) return ApiResult.Success();
-                MemberGoodsCountDTO memberGoodsCount = memberGoodsService.GetMemberGoodsCount(authorizePO.Id, memberCode);
+                PrayDetailDto prayDetail = memberGoodsService.GetMemberPrayDetail(authorizePO.Id, memberCode);
                 return ApiResult.Success(new
                 {
                     Role180Surplus = memberInfo.Role180Surplus,
-                    Role90Surplus = memberInfo.Role90Surplus,
-                    Role10Surplus = memberInfo.Role10Surplus,
+                    Role90Surplus = memberInfo.Role180Surplus % 90,
+                    Role10Surplus = memberInfo.Role20Surplus % 10,
                     ArmAssignValue = memberInfo.ArmAssignValue,
                     Arm80Surplus = memberInfo.Arm80Surplus,
-                    Arm10Surplus = memberInfo.Arm10Surplus,
+                    Arm10Surplus = memberInfo.Arm20Surplus % 10,
                     Perm90Surplus = memberInfo.Perm90Surplus,
                     Perm10Surplus = memberInfo.Perm10Surplus,
-                    RolePrayTimes = memberInfo.RolePrayTimes,
-                    ArmPrayTimes = memberInfo.ArmPrayTimes,
-                    PermPrayTimes = memberInfo.PermPrayTimes,
-                    TotalPrayTimes = memberInfo.TotalPrayTimes,
-                    Star4Count = memberGoodsCount.Star4Count,
-                    Star5Count = memberGoodsCount.Star5Count,
-                    RoleStar4Count = memberGoodsCount.RoleStar4Count,
-                    ArmStar4Count = memberGoodsCount.ArmStar4Count,
-                    PermStar4Count = memberGoodsCount.PermStar4Count,
-                    RoleStar5Count = memberGoodsCount.RoleStar5Count,
-                    ArmStar5Count = memberGoodsCount.ArmStar5Count,
-                    PermStar5Count = memberGoodsCount.PermStar5Count,
-                    Star4Rate = NumberHelper.GetRate(memberGoodsCount.Star4Count, memberInfo.TotalPrayTimes),
-                    Star5Rate = NumberHelper.GetRate(memberGoodsCount.Star5Count, memberInfo.TotalPrayTimes),
-                    RoleStar4Rate = NumberHelper.GetRate(memberGoodsCount.RoleStar4Count, memberInfo.RolePrayTimes),
-                    ArmStar4Rate = NumberHelper.GetRate(memberGoodsCount.ArmStar4Count, memberInfo.ArmPrayTimes),
-                    PermStar4Rate = NumberHelper.GetRate(memberGoodsCount.PermStar4Count, memberInfo.PermPrayTimes),
-                    RoleStar5Rate = NumberHelper.GetRate(memberGoodsCount.RoleStar5Count, memberInfo.RolePrayTimes),
-                    ArmStar5Rate = NumberHelper.GetRate(memberGoodsCount.ArmStar5Count, memberInfo.ArmPrayTimes),
-                    PermStar5Rate = NumberHelper.GetRate(memberGoodsCount.PermStar5Count, memberInfo.PermPrayTimes)
+                    RolePrayTimes = prayDetail.RolePrayTimes,
+                    ArmPrayTimes = prayDetail.ArmPrayTimes,
+                    PermPrayTimes = prayDetail.PermPrayTimes,
+                    TotalPrayTimes = prayDetail.TotalPrayTimes,
+                    Star4Count = prayDetail.Star4Count,
+                    Star5Count = prayDetail.Star5Count,
+                    RoleStar4Count = prayDetail.RoleStar4Count,
+                    ArmStar4Count = prayDetail.ArmStar4Count,
+                    PermStar4Count = prayDetail.PermStar4Count,
+                    RoleStar5Count = prayDetail.RoleStar5Count,
+                    ArmStar5Count = prayDetail.ArmStar5Count,
+                    PermStar5Count = prayDetail.PermStar5Count,
+                    Star4Rate = NumberHelper.GetRate(prayDetail.Star4Count, memberInfo.TotalPrayTimes),
+                    Star5Rate = NumberHelper.GetRate(prayDetail.Star5Count, memberInfo.TotalPrayTimes),
+                    RoleStar4Rate = NumberHelper.GetRate(prayDetail.RoleStar4Count, prayDetail.RolePrayTimes),
+                    ArmStar4Rate = NumberHelper.GetRate(prayDetail.ArmStar4Count, prayDetail.ArmPrayTimes),
+                    PermStar4Rate = NumberHelper.GetRate(prayDetail.PermStar4Count, prayDetail.PermPrayTimes),
+                    RoleStar5Rate = NumberHelper.GetRate(prayDetail.RoleStar5Count, prayDetail.RolePrayTimes),
+                    ArmStar5Rate = NumberHelper.GetRate(prayDetail.ArmStar5Count, prayDetail.ArmPrayTimes),
+                    PermStar5Rate = NumberHelper.GetRate(prayDetail.PermStar5Count, prayDetail.PermPrayTimes)
                 });
             }
             catch (BaseException ex)
@@ -158,7 +158,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetLuckRanking([FromForm] AuthorizeDTO authorize)
+        public ApiResult GetLuckRanking([FromForm] AuthorizeDto authorize)
         {
             try
             {
@@ -191,7 +191,7 @@ namespace GenshinPray.Controllers.Api
         [HttpGet]
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult SetMemberAssign([FromForm] AuthorizeDTO authorize, string memberCode, string goodsName, string memberName = "")
+        public ApiResult SetMemberAssign([FromForm] AuthorizeDto authorize, string memberCode, string goodsName, string memberName = "")
         {
             try
             {
@@ -230,7 +230,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetMemberAssign([FromForm] AuthorizeDTO authorize, string memberCode)
+        public ApiResult GetMemberAssign([FromForm] AuthorizeDto authorize, string memberCode)
         {
             try
             {
@@ -269,7 +269,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetMemberPrayRecords([FromForm] AuthorizeDTO authorize, string memberCode)
+        public ApiResult GetMemberPrayRecords([FromForm] AuthorizeDto authorize, string memberCode)
         {
             try
             {
@@ -277,14 +277,14 @@ namespace GenshinPray.Controllers.Api
                 AuthorizePO authorizePO = authorize.AuthorizePO;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null) return ApiResult.Success();
-                List<PrayRecordDTO> allStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, 20);
-                List<PrayRecordDTO> armStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, YSPondType.武器, 20);
-                List<PrayRecordDTO> roleStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, YSPondType.角色, 20);
-                List<PrayRecordDTO> permStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, YSPondType.常驻, 20);
-                List<PrayRecordDTO> allStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, 20);
-                List<PrayRecordDTO> armStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, YSPondType.武器, 20);
-                List<PrayRecordDTO> roleStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, YSPondType.角色, 20);
-                List<PrayRecordDTO> permStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, YSPondType.常驻, 20);
+                List<PrayRecordDto> allStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, 20);
+                List<PrayRecordDto> armStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, YSPondType.武器, 20);
+                List<PrayRecordDto> roleStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, YSPondType.角色, 20);
+                List<PrayRecordDto> permStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, YSPondType.常驻, 20);
+                List<PrayRecordDto> allStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, 20);
+                List<PrayRecordDto> armStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, YSPondType.武器, 20);
+                List<PrayRecordDto> roleStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, YSPondType.角色, 20);
+                List<PrayRecordDto> permStar4List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.四星, YSPondType.常驻, 20);
                 return ApiResult.Success(new
                 {
                     star5 = new
@@ -324,7 +324,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult SetRolePond([FromForm] AuthorizeDTO authorize, [FromBody] RolePondDto rolePond)
+        public ApiResult SetRolePond([FromForm] AuthorizeDto authorize, [FromBody] RolePondDto rolePond)
         {
             try
             {
@@ -374,7 +374,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult SetArmPond([FromForm] AuthorizeDTO authorize, [FromBody] ArmPondDTO armPond)
+        public ApiResult SetArmPond([FromForm] AuthorizeDto authorize, [FromBody] ArmPondDTO armPond)
         {
             try
             {
@@ -423,7 +423,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult ResetRolePond([FromForm] AuthorizeDTO authorize)
+        public ApiResult ResetRolePond([FromForm] AuthorizeDto authorize)
         {
             try
             {
@@ -450,7 +450,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult ResetArmPond([FromForm] AuthorizeDTO authorize)
+        public ApiResult ResetArmPond([FromForm] AuthorizeDto authorize)
         {
             try
             {
@@ -478,7 +478,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult SetSkinRate([FromForm] AuthorizeDTO authorize, int rare)
+        public ApiResult SetSkinRate([FromForm] AuthorizeDto authorize, int rare)
         {
             try
             {

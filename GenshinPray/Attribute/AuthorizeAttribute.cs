@@ -61,7 +61,7 @@ namespace GenshinPray.Attribute
                 context.Result = new JsonResult(ApiResult.ApiMaximum);
                 return;
             }
-            context.ActionArguments["authorize"] = new AuthorizeDTO(authorizePO, prayTimesToday);
+            context.ActionArguments["authorize"] = new AuthorizeDto(authorizePO, prayTimesToday);
         }
 
     }

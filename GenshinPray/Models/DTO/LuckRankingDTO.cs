@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GenshinPray.Models.DTO
 {
-    public class LuckRankingDTO
+    public class LuckRankingDto
     {
         public int AuthId { get; set; }
 

@@ -57,20 +57,19 @@ namespace GenshinPray.Service.PrayService
         /// <param name="memberGoods"></param>
         /// <param name="prayCount">抽卡次数</param>
         /// <returns></returns>
-        public virtual YSPrayRecord[] GetPrayRecord(MemberPO memberInfo, YSUpItem ySUpItem, YSGoodsItem assignGoodsItem, List<MemberGoodsDTO> memberGoods, int prayCount)
+        public virtual YSPrayRecord[] GetPrayRecord(MemberPO memberInfo, YSUpItem ySUpItem, YSGoodsItem assignGoodsItem, List<MemberGoodsDto> memberGoods, int prayCount)
         {
             YSPrayRecord[] records = new YSPrayRecord[prayCount];
             for (int i = 0; i < records.Length; i++)
             {
                 memberInfo.Arm80Surplus--;
                 memberInfo.Arm20Surplus--;
-                memberInfo.Arm10Surplus--;
 
-                if (memberInfo.Arm10Surplus > 0)//无保底
+                if (memberInfo.Arm20Surplus % 10 != 0)//无保底
                 {
                     records[i] = GetActualItem(GetRandomInList(SingleList), ySUpItem, assignGoodsItem, memberInfo.ArmAssignValue, memberInfo.Arm20Surplus);
                 }
-                if (memberInfo.Arm10Surplus <= 0)//十连保底
+                if (memberInfo.Arm20Surplus % 10 == 0)//十连保底
                 {
                     records[i] = GetActualItem(GetRandomInList(Floor10List), ySUpItem, assignGoodsItem, memberInfo.ArmAssignValue, memberInfo.Arm20Surplus);
                 }
@@ -87,21 +86,18 @@ namespace GenshinPray.Service.PrayService
 
                 if (records[i].GoodsItem.RareType == YSRareType.四星 && isUpItem == false)
                 {
-                    records[i].Cost = 10 - memberInfo.Arm10Surplus;
-                    memberInfo.Arm10Surplus = 10;//十连小保底重置
-                    memberInfo.Arm20Surplus = 10;//十连大保底重置
+                    records[i].Cost = 10 - memberInfo.Arm20Surplus % 10;
+                    memberInfo.Arm20Surplus = 10;//十连保底重置
                 }
                 if (records[i].GoodsItem.RareType == YSRareType.四星 && isUpItem == true)
                 {
-                    records[i].Cost = 10 - memberInfo.Arm10Surplus;
-                    memberInfo.Arm10Surplus = 10;//十连小保底重置
-                    memberInfo.Arm20Surplus = 20;//十连大保底重置
+                    records[i].Cost = 10 - memberInfo.Arm20Surplus % 10;
+                    memberInfo.Arm20Surplus = 20;//十连保底重置
                 }
                 if (records[i].GoodsItem.RareType == YSRareType.五星 && isAssignItem == false)
                 {
                     records[i].Cost = 80 - memberInfo.Arm80Surplus;
                     if (assignGoodsItem != null) memberInfo.ArmAssignValue++;//如果已经定轨，命定值+1
-                    memberInfo.Arm10Surplus = 10;//十连小保底重置
                     memberInfo.Arm20Surplus = 20;//十连大保底重置
                     memberInfo.Arm80Surplus = 80;//八十发保底重置
                 }
@@ -109,7 +105,6 @@ namespace GenshinPray.Service.PrayService
                 {
                     records[i].Cost = 80 - memberInfo.Arm80Surplus;
                     if (assignGoodsItem != null) memberInfo.ArmAssignValue = 0;//命定值重置
-                    memberInfo.Arm10Surplus = 10;//十连小保底重置
                     memberInfo.Arm20Surplus = 20;//十连大保底重置
                     memberInfo.Arm80Surplus = 80;//八十发保底重置
                 }
@@ -141,7 +136,7 @@ namespace GenshinPray.Service.PrayService
             throw new GoodsNotFoundException($"未能随机获取与{Enum.GetName(typeof(YSProbability), ysProbability.ProbabilityType)}对应物品");
         }
 
-        public YSPrayResult GetPrayResult(AuthorizePO authorize, MemberPO memberInfo, YSUpItem ysUpItem, YSGoodsItem assignGoodsItem, List<MemberGoodsDTO> memberGoods, int prayCount)
+        public YSPrayResult GetPrayResult(AuthorizePO authorize, MemberPO memberInfo, YSUpItem ysUpItem, YSGoodsItem assignGoodsItem, List<MemberGoodsDto> memberGoods, int prayCount)
         {
             YSPrayResult ysPrayResult = new YSPrayResult();
             int arm80SurplusBefore = memberInfo.Arm80Surplus;
@@ -149,7 +144,6 @@ namespace GenshinPray.Service.PrayService
             YSPrayRecord[] prayRecords = GetPrayRecord(memberInfo, ysUpItem, assignGoodsItem, memberGoods, prayCount);
             YSPrayRecord[] sortPrayRecords = SortGoods(prayRecords);
 
-            memberInfo.ArmPrayTimes += prayCount;
             memberInfo.TotalPrayTimes += prayCount;
             if (assignGoodsItem == null || memberInfo.ArmAssignValue > 2)
             {
@@ -163,7 +157,7 @@ namespace GenshinPray.Service.PrayService
             ysPrayResult.PrayRecords = prayRecords;
             ysPrayResult.SortPrayRecords = sortPrayRecords;
             ysPrayResult.Star5Cost = GetStar5Cost(prayRecords, arm80SurplusBefore, 80);
-            ysPrayResult.Surplus10 = memberInfo.Arm10Surplus;
+            ysPrayResult.Surplus10 = memberInfo.Arm20Surplus % 10;
             return ysPrayResult;
         }
 

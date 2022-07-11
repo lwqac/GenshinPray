@@ -39,7 +39,7 @@ namespace GenshinPray.Dao
         }
 
 
-        public List<MemberGoodsDTO> GetMemberGoods(int authId, string memberCode)
+        public List<MemberGoodsDto> GetMemberGoods(int authId, string memberCode)
         {
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.Append(" select g.GoodsName,count(g.GoodsName) Count,g.GoodsType,g.RareType from member_goods mg");
@@ -47,7 +47,7 @@ namespace GenshinPray.Dao
             sqlBuilder.Append(" where mg.AuthId=@authId and mg.MemberCode=@memberCode");
             sqlBuilder.Append(" group by g.GoodsName,g.GoodsType,g.RareType");
             sqlBuilder.Append(" order by g.RareType desc,Count desc");
-            return Db.Ado.SqlQuery<MemberGoodsDTO>(sqlBuilder.ToString(), new { authId = authId, memberCode = memberCode });
+            return Db.Ado.SqlQuery<MemberGoodsDto>(sqlBuilder.ToString(), new { authId = authId, memberCode = memberCode });
         }
 
         public List<GoodsPO> getPermGoods(YSGoodsType goodsType, YSRareType rareType)

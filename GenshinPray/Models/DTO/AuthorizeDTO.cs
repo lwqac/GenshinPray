@@ -2,15 +2,15 @@
 
 namespace GenshinPray.Models.DTO
 {
-    public class AuthorizeDTO
+    public class AuthorizeDto
     {
         public AuthorizePO AuthorizePO { get; set; }
 
         public int PrayTimesToday { get; set; }
 
-        public AuthorizeDTO() { }
+        public AuthorizeDto() { }
 
-        public AuthorizeDTO(AuthorizePO AuthorizePO, int prayTimesToday)
+        public AuthorizeDto(AuthorizePO AuthorizePO, int prayTimesToday)
         {
             this.AuthorizePO = AuthorizePO;
             this.PrayTimesToday = prayTimesToday;

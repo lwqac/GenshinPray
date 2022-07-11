@@ -56,7 +56,7 @@ namespace GenshinPray.Service.PrayService
         /// <param name="memberGoods"></param>
         /// <param name="prayCount">抽卡次数</param>
         /// <returns></returns>
-        public virtual YSPrayRecord[] GetPrayRecord(MemberPO memberInfo, YSUpItem ySUpItem, List<MemberGoodsDTO> memberGoods, int prayCount)
+        public virtual YSPrayRecord[] GetPrayRecord(MemberPO memberInfo, YSUpItem ySUpItem, List<MemberGoodsDto> memberGoods, int prayCount)
         {
             YSPrayRecord[] records = new YSPrayRecord[prayCount];
             for (int i = 0; i < records.Length; i++)
@@ -105,7 +105,7 @@ namespace GenshinPray.Service.PrayService
             throw new GoodsNotFoundException($"未能随机获取与{Enum.GetName(typeof(YSProbability), ysProbability.ProbabilityType)}类型对应的物品");
         }
 
-        public YSPrayResult GetPrayResult(AuthorizePO authorize, MemberPO memberInfo, YSUpItem ysUpItem, List<MemberGoodsDTO> memberGoods, int prayCount)
+        public YSPrayResult GetPrayResult(AuthorizePO authorize, MemberPO memberInfo, YSUpItem ysUpItem, List<MemberGoodsDto> memberGoods, int prayCount)
         {
             YSPrayResult ysPrayResult = new YSPrayResult();
             int role90SurplusBefore = memberInfo.FullRole90Surplus;

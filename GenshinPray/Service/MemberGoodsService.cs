@@ -15,13 +15,15 @@ namespace GenshinPray.Service
     public class MemberGoodsService : BaseService
     {
         private MemberGoodsDao memberGoodsDao;
+        private PrayRecordDao prayRecordDao;
 
-        public MemberGoodsService(MemberGoodsDao memberGoodsDao)
+        public MemberGoodsService(MemberGoodsDao memberGoodsDao, PrayRecordDao prayRecordDao)
         {
             this.memberGoodsDao = memberGoodsDao;
+            this.prayRecordDao = prayRecordDao;
         }
 
-        public void AddMemberGoods(YSPrayResult ySPrayResult, List<MemberGoodsDTO> memberGoods, YSPondType pondType, int authId, string memberCode)
+        public void AddMemberGoods(YSPrayResult ySPrayResult, List<MemberGoodsDto> memberGoods, YSPondType pondType, int authId, string memberCode)
         {
             foreach (var result in ySPrayResult.PrayRecords)
             {
@@ -37,18 +39,22 @@ namespace GenshinPray.Service
             }
         }
 
-        public MemberGoodsCountDTO GetMemberGoodsCount(int authId, string memberCode)
+        public PrayDetailDto GetMemberPrayDetail(int authId, string memberCode)
         {
-            MemberGoodsCountDTO memberGoodsCount = new MemberGoodsCountDTO();
-            memberGoodsCount.Star4Count = memberGoodsDao.CountByMember(authId, memberCode, YSRareType.四星);
-            memberGoodsCount.Star5Count = memberGoodsDao.CountByMember(authId, memberCode, YSRareType.五星);
-            memberGoodsCount.RoleStar4Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.角色, YSRareType.四星);
-            memberGoodsCount.ArmStar4Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.武器, YSRareType.四星);
-            memberGoodsCount.PermStar4Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.常驻, YSRareType.四星);
-            memberGoodsCount.RoleStar5Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.角色, YSRareType.五星);
-            memberGoodsCount.ArmStar5Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.武器, YSRareType.五星);
-            memberGoodsCount.PermStar5Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.常驻, YSRareType.五星);
-            return memberGoodsCount;
+            PrayDetailDto prayDetail = new PrayDetailDto();
+            prayDetail.Star4Count = memberGoodsDao.CountByMember(authId, memberCode, YSRareType.四星);
+            prayDetail.Star5Count = memberGoodsDao.CountByMember(authId, memberCode, YSRareType.五星);
+            prayDetail.RoleStar4Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.角色, YSRareType.四星);
+            prayDetail.ArmStar4Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.武器, YSRareType.四星);
+            prayDetail.PermStar4Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.常驻, YSRareType.四星);
+            prayDetail.RoleStar5Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.角色, YSRareType.五星);
+            prayDetail.ArmStar5Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.武器, YSRareType.五星);
+            prayDetail.PermStar5Count = memberGoodsDao.CountByMember(authId, memberCode, YSPondType.常驻, YSRareType.五星);
+            prayDetail.RolePrayTimes = prayRecordDao.getPrayTimes(authId, memberCode, YSPondType.角色);
+            prayDetail.ArmPrayTimes = prayRecordDao.getPrayTimes(authId, memberCode, YSPondType.武器);
+            prayDetail.PermPrayTimes = prayRecordDao.getPrayTimes(authId, memberCode, YSPondType.常驻);
+            prayDetail.TotalPrayTimes = prayRecordDao.getPrayTimes(authId, memberCode);
+            return prayDetail;
         }
 
         public LuckRankingVO getLuckRanking(int authId, int days, int top)
@@ -57,8 +63,8 @@ namespace GenshinPray.Service
             if (luckRankingCache != null) return luckRankingCache;
             DateTime startDate = DateTime.Now.AddDays(-1 * days);
             DateTime endDate = DateTime.Now;
-            List<LuckRankingDTO> star5RankingList = memberGoodsDao.getLuckRanking(authId, top, YSRareType.五星, startDate, endDate);
-            List<LuckRankingDTO> star4RankingList = memberGoodsDao.getLuckRanking(authId, top, YSRareType.四星, startDate, endDate);
+            List<LuckRankingDto> star5RankingList = memberGoodsDao.getLuckRanking(authId, top, YSRareType.五星, startDate, endDate);
+            List<LuckRankingDto> star4RankingList = memberGoodsDao.getLuckRanking(authId, top, YSRareType.四星, startDate, endDate);
             LuckRankingVO luckRankingVO = new LuckRankingVO();
             luckRankingVO.Top = top;
             luckRankingVO.CountDay= days;
@@ -70,7 +76,7 @@ namespace GenshinPray.Service
             return luckRankingVO;
         }
 
-        private RareRankingVO toRareRanking(LuckRankingDTO luckRankingDTO)
+        private RareRankingVO toRareRanking(LuckRankingDto luckRankingDTO)
         {
             RareRankingVO rareRankingVO = new RareRankingVO();
             rareRankingVO.TotalPrayTimes = luckRankingDTO.TotalPrayTimes;
@@ -81,12 +87,12 @@ namespace GenshinPray.Service
             return rareRankingVO;
         }
 
-        public List<PrayRecordDTO> getPrayRecords(int authId, string memberCode, YSRareType rareType, int top)
+        public List<PrayRecordDto> getPrayRecords(int authId, string memberCode, YSRareType rareType, int top)
         {
             return memberGoodsDao.getPrayRecords(authId, memberCode, rareType, top);
         }
 
-        public List<PrayRecordDTO> getPrayRecords(int authId, string memberCode, YSRareType rareType, YSPondType pondType, int top)
+        public List<PrayRecordDto> getPrayRecords(int authId, string memberCode, YSRareType rareType, YSPondType pondType, int top)
         {
             return memberGoodsDao.getPrayRecords(authId, memberCode, rareType, pondType, top);
         }

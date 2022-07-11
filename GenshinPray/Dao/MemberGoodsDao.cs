@@ -29,7 +29,16 @@ namespace GenshinPray.Dao
             return Db.Ado.SqlQuery<int>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, PondType = pondType, RareType = rareType }).First();
         }
 
-        public List<LuckRankingDTO> getLuckRanking(int authId, int top, YSRareType rareType, DateTime startDate, DateTime endDate)
+        /// <summary>
+        /// 统计一个时间段内，同一个authId下某一个星级的出货率排行
+        /// </summary>
+        /// <param name="authId"></param>
+        /// <param name="top"></param>
+        /// <param name="rareType"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public List<LuckRankingDto> getLuckRanking(int authId, int top, YSRareType rareType, DateTime startDate, DateTime endDate)
         {
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.Append(" select temp.AuthId, temp.MemberCode, m.MemberName, temp.RareType, temp.RareCount,");
@@ -46,27 +55,27 @@ namespace GenshinPray.Dao
             sqlBuilder.Append(" 	group by AuthId,MemberCode");
             sqlBuilder.Append(" ) temp2 on temp2.MemberCode=m.MemberCode");
             sqlBuilder.Append(" where m.AuthId=@AuthId order by temp.RareType desc,rareRate desc,temp.RareCount asc");
-            return Db.Ado.SqlQuery<LuckRankingDTO>(sqlBuilder.ToString(), new { AuthId = authId, Top = top, RareType = rareType, StartDate = startDate, EndDate = endDate });
+            return Db.Ado.SqlQuery<LuckRankingDto>(sqlBuilder.ToString(), new { AuthId = authId, Top = top, RareType = rareType, StartDate = startDate, EndDate = endDate });
         }
 
-        public List<PrayRecordDTO> getPrayRecords(int authId, string memberCode, YSRareType rareType, int top)
+        public List<PrayRecordDto> getPrayRecords(int authId, string memberCode, YSRareType rareType, int top)
         {
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.Append(" select mg.GoodsId,g.GoodsName,g.GoodsType,g.GoodsSubType,g.RareType,mg.PondType,mg.Cost,mg.CreateDate from member_goods mg");
             sqlBuilder.Append(" inner join goods g on g.Id=mg.GoodsId");
             sqlBuilder.Append(" where mg.AuthId=@AuthId and mg.MemberCode=@MemberCode and g.RareType=@RareType");
             sqlBuilder.Append(" order by mg.CreateDate desc limit @Top");
-            return Db.Ado.SqlQuery<PrayRecordDTO>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, Top = top });
+            return Db.Ado.SqlQuery<PrayRecordDto>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, Top = top });
         }
 
-        public List<PrayRecordDTO> getPrayRecords(int authId, string memberCode, YSRareType rareType, YSPondType pondType, int top)
+        public List<PrayRecordDto> getPrayRecords(int authId, string memberCode, YSRareType rareType, YSPondType pondType, int top)
         {
             StringBuilder sqlBuilder = new StringBuilder();
             sqlBuilder.Append(" select mg.GoodsId,g.GoodsName,g.GoodsType,g.GoodsSubType,g.RareType,mg.PondType,mg.Cost,mg.CreateDate from member_goods mg");
             sqlBuilder.Append(" inner join goods g on g.Id=mg.GoodsId");
             sqlBuilder.Append(" where mg.AuthId=@AuthId and mg.MemberCode=@MemberCode and g.RareType=@RareType and mg.PondType=@PondType");
             sqlBuilder.Append(" order by mg.CreateDate desc limit @Top");
-            return Db.Ado.SqlQuery<PrayRecordDTO>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, PondType = pondType, Top = top });
+            return Db.Ado.SqlQuery<PrayRecordDto>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, PondType = pondType, Top = top });
         }
 
 

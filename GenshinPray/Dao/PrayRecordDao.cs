@@ -16,6 +16,15 @@ namespace GenshinPray.Dao
             return Db.Queryable<PrayRecordPO>().Where(o => o.AuthId == authId && o.CreateDate >= DateTimeHelper.getTodayStart() && o.CreateDate < DateTimeHelper.getTodayEnd()).Count();
         }
 
+        public int getPrayTimes(int authId, string memberCode)
+        {
+            return Db.Queryable<PrayRecordPO>().Where(o => o.AuthId == authId && o.MemberCode == memberCode).Sum(o => o.PrayCount);
+        }
+
+        public int getPrayTimes(int authId, string memberCode, YSPondType pondType)
+        {
+            return Db.Queryable<PrayRecordPO>().Where(o => o.AuthId == authId && o.MemberCode == memberCode && o.PondType == pondType).Sum(o => o.PrayCount);
+        }
 
 
     }

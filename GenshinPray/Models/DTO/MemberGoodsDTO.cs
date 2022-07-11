@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GenshinPray.Models.DTO
 {
-    public class MemberGoodsDTO
+    public class MemberGoodsDto
     {
         public string GoodsName { get; set; }
 

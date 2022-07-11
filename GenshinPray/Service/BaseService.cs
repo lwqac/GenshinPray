@@ -48,7 +48,7 @@ namespace GenshinPray.Service
         /// </summary>
         /// <param name="prayRecordList"></param>
         /// <returns></returns>
-        public List<PrayRecordVO> ChangeToPrayRecordVO(List<PrayRecordDTO> prayRecordList)
+        public List<PrayRecordVO> ChangeToPrayRecordVO(List<PrayRecordDto> prayRecordList)
         {
             return prayRecordList.Select(m => new PrayRecordVO()
             {

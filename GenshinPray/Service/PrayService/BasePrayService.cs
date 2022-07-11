@@ -178,7 +178,7 @@ namespace GenshinPray.Service.PrayService
             apiResult.PrayCount = ySPrayResult.PrayRecords.Count();
             apiResult.ApiDailyCallSurplus = authorizePO.DailyCall - prayTimesToday > 0 ? authorizePO.DailyCall - prayTimesToday : 0;
             apiResult.Role180Surplus = ySPrayResult.MemberInfo.Role180Surplus;
-            apiResult.Role90Surplus = ySPrayResult.MemberInfo.Role90Surplus;
+            apiResult.Role90Surplus = ySPrayResult.MemberInfo.Role180Surplus % 90;
             apiResult.Arm80Surplus = ySPrayResult.MemberInfo.Arm80Surplus;
             apiResult.ArmAssignValue = ySPrayResult.MemberInfo.ArmAssignValue;
             apiResult.Perm90Surplus = ySPrayResult.MemberInfo.Perm90Surplus;
@@ -221,16 +221,16 @@ namespace GenshinPray.Service.PrayService
             return DrawHelper.drawTenPrayImg(authorize, sortPrayRecords, memberInfo);
         }
 
-        protected bool CheckIsNew(List<MemberGoodsDTO> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
+        protected bool CheckIsNew(List<MemberGoodsDto> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
         {
             bool isOwnedBefore = memberGoods.Where(m => m.GoodsName == checkRecord.GoodsItem.GoodsName).Any();
             bool isOwnedInRecord = records.Where(m => m != null && m != checkRecord && m.GoodsItem.GoodsName == checkRecord.GoodsItem.GoodsName).Any();
             return isOwnedBefore == false && isOwnedInRecord == false;
         }
 
-        protected int GetOwnCountBefore(List<MemberGoodsDTO> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
+        protected int GetOwnCountBefore(List<MemberGoodsDto> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
         {
-            MemberGoodsDTO ownGood = memberGoods.Where(m => m.GoodsName == checkRecord.GoodsItem.GoodsName).FirstOrDefault();
+            MemberGoodsDto ownGood = memberGoods.Where(m => m.GoodsName == checkRecord.GoodsItem.GoodsName).FirstOrDefault();
             int ownBefore = ownGood == null ? 0 : ownGood.Count;
             int ownInRecord = records.Where(m => m != null && m != checkRecord && m.GoodsItem.GoodsName == checkRecord.GoodsItem.GoodsName).Count();
             return ownBefore + ownInRecord;

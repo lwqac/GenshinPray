@@ -16,6 +16,9 @@ namespace GenshinPray.Models.PO
         [SugarColumn(IsNullable = false, Length = 32, ColumnDescription = "成员编号")]
         public string MemberCode { get; set; }
 
+        [SugarColumn(IsNullable = false, ColumnDescription = "蛋池")]
+        public YSPondType PondType { get; set; }
+
         [SugarColumn(IsNullable = false, ColumnDescription = "祈愿次数")]
         public int PrayCount { get; set; }
 
