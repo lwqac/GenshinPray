@@ -316,7 +316,7 @@ namespace GenshinPray.Util
         {
             int shiftXIndex = 0;
             int shiftYIndex = -5;
-            if (goodsItem.RareType == YSRareType.五星) shiftXIndex = -105;
+            if (goodsItem.RareType == YSRareType.五星) shiftXIndex = -103;
             if (goodsItem.RareType == YSRareType.四星) shiftXIndex = -98;
             if (goodsItem.RareType == YSRareType.三星) shiftXIndex = 2;
             using Image imgLight = new Bitmap(FilePath.getYSLightPath(goodsItem));
