@@ -29,9 +29,9 @@ namespace GenshinPray.Service
         /// <returns></returns>
         public YSGoodsItem GetGoodsItemById(int id)
         {
-            GoodsPO goodsPO = goodsDao.GetById(id);
-            if (goodsPO == null) return null;
-            return ChangeToYSGoodsItem(goodsPO);
+            GoodsPO goods = goodsDao.GetById(id);
+            if (goods == null) return null;
+            return new YSGoodsItem(goods);
         }
 
         /// <summary>
@@ -204,23 +204,6 @@ namespace GenshinPray.Service
             return NonUpList;
         }
 
-
-        /// <summary>
-        /// 将GoodsPO转化为YSGoodsItem
-        /// </summary>
-        /// <param name="goodsPO"></param>
-        /// <returns></returns>
-        private YSGoodsItem ChangeToYSGoodsItem(GoodsPO goodsPO)
-        {
-            YSGoodsItem goodsItem = new YSGoodsItem();
-            goodsItem.GoodsID = goodsPO.Id;
-            goodsItem.GoodsName = goodsPO.GoodsName;
-            goodsItem.RareType = goodsPO.RareType;
-            goodsItem.GoodsType = goodsPO.GoodsType;
-            goodsItem.GoodsSubType = goodsPO.GoodsSubType;
-            return goodsItem;
-        }
-
         /// <summary>
         /// 将GoodsPO转化为YSGoodsItem
         /// </summary>
@@ -231,8 +214,7 @@ namespace GenshinPray.Service
             List<YSGoodsItem> goodsItemList = new List<YSGoodsItem>();
             foreach (GoodsPO goodsPO in poList)
             {
-                YSGoodsItem goodsItem = ChangeToYSGoodsItem(goodsPO);
-                goodsItemList.Add(goodsItem);
+                goodsItemList.Add(new YSGoodsItem(goodsPO));
             }
             return goodsItemList;
         }
@@ -257,10 +239,10 @@ namespace GenshinPray.Service
         public YSGoodsItem getAssignGoodsItem(YSUpItem ySUpItem, int armAssignId)
         {
             if (armAssignId == 0) return null;
-            GoodsPO goodsInfo = goodsDao.GetById(armAssignId);
-            if (goodsInfo == null) return null;
+            GoodsPO goods = goodsDao.GetById(armAssignId);
+            if (goods == null) return null;
             if (ySUpItem.Star5UpList.Where(o => o.GoodsID == armAssignId).Count() == 0) return null;
-            return ChangeToYSGoodsItem(goodsInfo);
+            return new YSGoodsItem(goods);
         }
 
         /// <summary>

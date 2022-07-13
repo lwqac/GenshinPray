@@ -1,4 +1,5 @@
 ﻿using GenshinPray.Common;
+using GenshinPray.Models.PO;
 using GenshinPray.Type;
 using System;
 using System.Collections.Generic;
@@ -51,6 +52,17 @@ namespace GenshinPray.Models
         public YSGoodsItem()
         {
             this.Probability = SiteConfig.GoodsDefaultPR;
+        }
+
+        public YSGoodsItem(GoodsPO goods)
+        {
+            this.Probability = SiteConfig.GoodsDefaultPR;
+            this.GoodsID = goods.Id;
+            this.GoodsName = goods.GoodsName;
+            this.RareType = goods.RareType;
+            this.GoodsType= goods.GoodsType;
+            this.GoodsSubType = goods.GoodsSubType;
+
         }
 
     }

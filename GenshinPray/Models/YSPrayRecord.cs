@@ -13,26 +13,27 @@ namespace GenshinPray.Models
         public YSGoodsItem GoodsItem { get; set; }
 
         /// <summary>
-        /// 拥有数量
+        /// 包括当前结果在内,当前结果以前所拥有的数量
         /// </summary>
-        public bool IsNew { get; set; }
-
-        /// <summary>
-        /// 已拥有数量
-        /// </summary>
-        public int OwnCountBefore { get; set; }
+        public int OwnedCount { get; set; }
 
         /// <summary>
         /// 在一次保底中消耗多少抽
         /// </summary>
         public int Cost { get; set; }
 
-
         public YSPrayRecord(YSGoodsItem goodsItem)
         {
+            this.OwnedCount = 1;
             this.GoodsItem = goodsItem;
         }
 
+        public YSPrayRecord(YSGoodsItem goodsItem, int ownedCount, int cost)
+        {
+            this.GoodsItem = goodsItem;
+            this.OwnedCount = ownedCount;
+            this.Cost = cost;
+        }
 
 
     }

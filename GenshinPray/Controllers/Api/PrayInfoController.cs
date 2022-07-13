@@ -42,7 +42,7 @@ namespace GenshinPray.Controllers.Api
         {
             try
             {
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 Dictionary<int, YSUpItem> armUpItemDic = DataCache.DefaultArmItem.Merge<int, YSUpItem>(goodsService.LoadArmItem(authorizePO.Id));
                 Dictionary<int, YSUpItem> roleUpItemDic = DataCache.DefaultRoleItem.Merge<int, YSUpItem>(goodsService.LoadRoleItem(authorizePO.Id));
                 Dictionary<int, YSUpItem> permUpItemDic = new Dictionary<int, YSUpItem>() { { 0, DataCache.DefaultPermItem } };
@@ -103,7 +103,7 @@ namespace GenshinPray.Controllers.Api
             try
             {
                 checkNullParam(memberCode);
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null) return ApiResult.Success();
                 PrayDetailDto prayDetail = memberGoodsService.GetMemberPrayDetail(authorizePO.Id, memberCode);
@@ -164,7 +164,7 @@ namespace GenshinPray.Controllers.Api
             {
                 int top = 20;
                 int days = 7;
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 LuckRankingVO luckRankingVO = memberGoodsService.getLuckRanking(authorizePO.Id, days, top);
                 return ApiResult.Success(luckRankingVO);
             }
@@ -197,7 +197,7 @@ namespace GenshinPray.Controllers.Api
             {
                 int pondIndex = 0;
                 checkNullParam(memberCode, goodsName);
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 GoodsPO goodsInfo = goodsService.GetGoodsByName(goodsName.Trim());
                 if (goodsInfo == null) return ApiResult.GoodsNotFound;
 
@@ -235,7 +235,7 @@ namespace GenshinPray.Controllers.Api
             try
             {
                 checkNullParam(memberCode);
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null || memberInfo.ArmAssignId == 0) return ApiResult.Success("未找到定轨信息");
                 GoodsPO goodsInfo = goodsService.GetGoodsById(memberInfo.ArmAssignId);
@@ -274,7 +274,7 @@ namespace GenshinPray.Controllers.Api
             try
             {
                 checkNullParam(memberCode);
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null) return ApiResult.Success();
                 List<PrayRecordDto> allStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, 20);
@@ -315,7 +315,6 @@ namespace GenshinPray.Controllers.Api
             }
         }
 
-
         /// <summary>
         /// 设定角色池
         /// </summary>
@@ -331,7 +330,7 @@ namespace GenshinPray.Controllers.Api
                 if (rolePond.PondIndex < 0 || rolePond.PondIndex > 10) throw new ParamException("参数错误");
                 if (rolePond.UpItems == null || rolePond.UpItems.Count == 0 || rolePond.UpItems.Count > 4) throw new ParamException("参数错误");
 
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 List<GoodsPO> goodsList = new List<GoodsPO>();
                 foreach (string item in rolePond.UpItems)
                 {
@@ -380,7 +379,7 @@ namespace GenshinPray.Controllers.Api
             {
                 if (armPond.UpItems == null || armPond.UpItems.Count == 0 || armPond.UpItems.Count > 7) throw new ParamException("参数错误");
 
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 List<GoodsPO> goodsList = new List<GoodsPO>();
                 foreach (string item in armPond.UpItems)
                 {
@@ -427,7 +426,7 @@ namespace GenshinPray.Controllers.Api
         {
             try
             {
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 goodsService.ClearPondGoods(authorizePO.Id, YSPondType.角色);
                 return ApiResult.Success();
             }
@@ -454,7 +453,7 @@ namespace GenshinPray.Controllers.Api
         {
             try
             {
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 goodsService.ClearPondGoods(authorizePO.Id, YSPondType.武器);
                 return ApiResult.Success();
             }
@@ -483,7 +482,7 @@ namespace GenshinPray.Controllers.Api
             try
             {
                 if (rare < 0 || rare > 100) throw new ParamException("参数错误");
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorize.Authorize;
                 goodsService.UpdateSkinRate(authorizePO.Id, rare);
                 return ApiResult.Success();
             }

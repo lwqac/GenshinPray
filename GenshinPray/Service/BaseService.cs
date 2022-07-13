@@ -11,6 +11,7 @@ namespace GenshinPray.Service
 {
     public abstract class BaseService
     {
+
         /// <summary>
         /// 将YSPrayRecord转换为GoodsVO
         /// </summary>

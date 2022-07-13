@@ -80,8 +80,7 @@ namespace GenshinPray.Service.PrayService
                 }
 
                 bool isUpItem = IsUpItem(ySUpItem, records[i].GoodsItem);//判断是否为本期up的物品
-                records[i].IsNew = CheckIsNew(memberGoods, records, records[i]);//判断是否为New
-                records[i].OwnCountBefore = GetOwnCountBefore(memberGoods, records, records[i]);//统计已拥有数量
+                records[i].OwnedCount = GetOwnedCount(memberGoods, records, records[i]);//统计已拥有数量
 
                 if (records[i].GoodsItem.RareType == YSRareType.四星 && isUpItem == false)
                 {
@@ -136,7 +135,7 @@ namespace GenshinPray.Service.PrayService
             int role90SurplusBefore = memberInfo.Role180Surplus % 90;
 
             YSPrayRecord[] prayRecords = GetPrayRecord(memberInfo, ysUpItem, memberGoods, prayCount);
-            YSPrayRecord[] sortPrayRecords = SortGoods(prayRecords);
+            YSPrayRecord[] sortPrayRecords = SortRecords(prayRecords);
             memberInfo.TotalPrayTimes += prayCount;
 
             ysPrayResult.MemberInfo = memberInfo;

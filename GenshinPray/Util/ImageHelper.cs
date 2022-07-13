@@ -13,6 +13,8 @@ namespace GenshinPray.Util
     public static class ImageHelper
     {
 
+
+
         /// <summary>
         /// 将Image保存为Jpg
         /// </summary>
@@ -28,9 +30,10 @@ namespace GenshinPray.Util
             myEncoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, 100L);
             if (string.IsNullOrEmpty(fileName)) fileName = DateTime.Now.ToString("yyyyMMddHHmmssffff");
             string fullSavePath = Path.Combine(savePath, fileName + ".jpg");
-            if (imgWidth == 0)
+            if (imgWidth <= 0 || imgWidth > 1920)
             {
                 image.Save(fullSavePath, imageCodecInfo, myEncoderParameters);
+                return new FileInfo(fullSavePath);
             }
             else
             {

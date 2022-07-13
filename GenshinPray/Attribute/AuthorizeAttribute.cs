@@ -53,15 +53,15 @@ namespace GenshinPray.Attribute
                 context.Result = new JsonResult(ApiResult.PermissionDenied);
                 return;
             }
-            int prayTimesToday = prayRecordService.GetPrayTimesToday(authorizePO.Id);
-            if (PrayLimit == PrayLimit.Yes && prayTimesToday >= authorizePO.DailyCall)
+            int apiCalledToday = prayRecordService.GetPrayTimesToday(authorizePO.Id);
+            if (PrayLimit == PrayLimit.Yes && apiCalledToday >= authorizePO.DailyCall)
             {
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                 context.Result = new JsonResult(ApiResult.ApiMaximum);
                 return;
             }
-            context.ActionArguments["authorize"] = new AuthorizeDto(authorizePO, prayTimesToday);
+            context.ActionArguments["authorize"] = new AuthorizeDto(authorizePO, apiCalledToday);
         }
 
     }

@@ -20,5 +20,12 @@ namespace GenshinPray.Util
             return new Random(seed);
         }
 
+        public static T Random<T>(this List<T> list)
+        {
+            if (list == null || list.Count == 0) return default(T);
+            int randomIndex = new Random().Next(0, list.Count);
+            return list[randomIndex];
+        }
+
     }
 }

@@ -215,12 +215,12 @@ namespace GenshinPray.Common
         /// 角色大图路径
         /// </summary>
         /// <param name="goodsItem"></param>
-        /// <param name="isUseSkin"></param>
+        /// <param name="withSkin"></param>
         /// <returns></returns>
-        public static string getYSBigRoleImgPath(YSGoodsItem goodsItem,bool isUseSkin)
+        public static string getYSBigRoleImgPath(YSGoodsItem goodsItem, bool withSkin)
         {
             string generalPath = Path.Combine(SiteConfig.PrayMaterialSavePath, "角色大图", $"{goodsItem.GoodsName}.png");
-            if (isUseSkin == false) return generalPath;
+            if (withSkin == false) return generalPath;
             string skinDirPath = Path.Combine(SiteConfig.PrayMaterialSavePath, "服装大图", $"{goodsItem.GoodsName}");
             if (Directory.Exists(skinDirPath) == false) return generalPath;
             DirectoryInfo directoryInfo = new DirectoryInfo(skinDirPath);

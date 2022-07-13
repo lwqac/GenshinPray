@@ -79,8 +79,7 @@ namespace GenshinPray.Service.PrayService
                     records[i] = GetActualItem(GetRandomInList(Floor80List), ySUpItem);
                 }
 
-                records[i].IsNew = CheckIsNew(memberGoods, records, records[i]);//判断是否为New
-                records[i].OwnCountBefore = GetOwnCountBefore(memberGoods, records, records[i]);//统计已拥有数量
+                records[i].OwnedCount = GetOwnedCount(memberGoods, records, records[i]);//统计已拥有数量
 
                 if (records[i].GoodsItem.RareType == YSRareType.四星)
                 {
@@ -111,7 +110,7 @@ namespace GenshinPray.Service.PrayService
             int arm80SurplusBefore = memberInfo.FullArm80Surplus;
 
             YSPrayRecord[] prayRecords = GetPrayRecord(memberInfo, ysUpItem, memberGoods, prayCount);
-            YSPrayRecord[] sortPrayRecords = SortGoods(prayRecords);
+            YSPrayRecord[] sortPrayRecords = SortRecords(prayRecords);
 
             memberInfo.TotalPrayTimes += prayCount;
 

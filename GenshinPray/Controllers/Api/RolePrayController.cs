@@ -28,7 +28,7 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 单抽角色祈愿池
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="memberCode">成员编号(可以传入QQ号)</param>
         /// <param name="memberName"></param>
         /// <param name="pondIndex">卡池编号</param>
@@ -37,7 +37,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PrayLimit.Yes })]
-        public ApiResult PrayOne([FromForm] AuthorizeDto authorize, string memberCode, string memberName = "", int pondIndex = 0, bool toBase64 = false, int imgWidth = 0)
+        public ApiResult PrayOne([FromForm] AuthorizeDto authorizeDto, string memberCode, string memberName = "", int pondIndex = 0, bool toBase64 = false, int imgWidth = 0)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace GenshinPray.Controllers.Api
                 CheckImgWidth(imgWidth);
 
                 YSPrayResult ySPrayResult = null;
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 Dictionary<int, YSUpItem> upItemDic = goodsService.LoadRoleItem(authorizePO.Id);
                 YSUpItem ysUpItem = upItemDic.ContainsKey(pondIndex) ? upItemDic[pondIndex] : null;
                 if (ysUpItem == null) ysUpItem = DataCache.DefaultRoleItem.ContainsKey(pondIndex) ? DataCache.DefaultRoleItem[pondIndex] : null;
@@ -64,7 +64,7 @@ namespace GenshinPray.Controllers.Api
                     DbScoped.SugarScope.CommitTran();
                 }
 
-                ApiPrayResult prayResult = basePrayService.CreatePrayResult(ysUpItem, ySPrayResult, authorizePO, authorize.PrayTimesToday, toBase64, imgWidth);
+                ApiPrayResult prayResult = basePrayService.CreatePrayResult(ysUpItem, ySPrayResult, authorizeDto, toBase64, imgWidth);
                 return ApiResult.Success(prayResult);
             }
             catch (BaseException ex)
@@ -84,7 +84,7 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 十连角色祈愿池
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="memberCode">成员编号(可以传入QQ号)</param>
         /// <param name="memberName"></param>
         /// <param name="pondIndex">卡池编号</param>
@@ -93,7 +93,7 @@ namespace GenshinPray.Controllers.Api
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PrayLimit.Yes })]
-        public ApiResult PrayTen([FromForm] AuthorizeDto authorize, string memberCode, string memberName = "", int pondIndex = 0, bool toBase64 = false, int imgWidth = 0)
+        public ApiResult PrayTen([FromForm] AuthorizeDto authorizeDto, string memberCode, string memberName = "", int pondIndex = 0, bool toBase64 = false, int imgWidth = 0)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace GenshinPray.Controllers.Api
                 CheckImgWidth(imgWidth);
 
                 YSPrayResult ySPrayResult = null;
-                AuthorizePO authorizePO = authorize.AuthorizePO;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 Dictionary<int, YSUpItem> upItemDic = goodsService.LoadRoleItem(authorizePO.Id);
                 YSUpItem ysUpItem = upItemDic.ContainsKey(pondIndex) ? upItemDic[pondIndex] : null;
                 if (ysUpItem == null) ysUpItem = DataCache.DefaultRoleItem.ContainsKey(pondIndex) ? DataCache.DefaultRoleItem[pondIndex] : null;
@@ -120,7 +120,7 @@ namespace GenshinPray.Controllers.Api
                     DbScoped.SugarScope.CommitTran();
                 }
 
-                ApiPrayResult prayResult = basePrayService.CreatePrayResult(ysUpItem, ySPrayResult, authorizePO, authorize.PrayTimesToday, toBase64, imgWidth);
+                ApiPrayResult prayResult = basePrayService.CreatePrayResult(ysUpItem, ySPrayResult, authorizeDto, toBase64, imgWidth);
                 return ApiResult.Success(prayResult);
             }
             catch (BaseException ex)

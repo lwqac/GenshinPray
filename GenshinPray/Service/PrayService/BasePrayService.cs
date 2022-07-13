@@ -27,6 +27,17 @@ namespace GenshinPray.Service.PrayService
         }
 
         /// <summary>
+        /// 显示顺序排序
+        /// </summary>
+        /// <param name="YSPrayRecords"></param>
+        /// <returns></returns>
+        public YSPrayRecord[] SortRecords(YSPrayRecord[] YSPrayRecords)
+        {
+            //先按物品种类排序（0->2），相同种类的物品之间按稀有度倒序排序（5->1）,最后New排在前面
+            return YSPrayRecords.OrderBy(c => c.GoodsItem.GoodsType).ThenByDescending(c => c.GoodsItem.RareType).ThenBy(c => c.OwnedCount).ToArray();
+        }
+
+        /// <summary>
         /// 从物品列表中随机出一个物品
         /// </summary>
         /// <param name="probabilityList"></param>
@@ -130,17 +141,6 @@ namespace GenshinPray.Service.PrayService
         }
 
         /// <summary>
-        /// 显示顺序排序
-        /// </summary>
-        /// <param name="YSPrayRecords"></param>
-        /// <returns></returns>
-        public YSPrayRecord[] SortGoods(YSPrayRecord[] YSPrayRecords)
-        {
-            //先按物品种类排序（0->2），相同种类的物品之间按稀有度倒序排序（5->1）,最后New排在前面
-            return YSPrayRecords.OrderBy(c => c.GoodsItem.GoodsType).ThenByDescending(c => c.GoodsItem.RareType).ThenBy(c => c.OwnCountBefore).ToArray();
-        }
-
-        /// <summary>
         /// 获取一次五星保底内,成员获得5星角色的累计祈愿次数,0代表还未获得S
         /// </summary>
         /// <param name="YSPrayRecords">祈愿结果</param>
@@ -166,17 +166,16 @@ namespace GenshinPray.Service.PrayService
         /// </summary>
         /// <param name="ySUpItem"></param>
         /// <param name="ySPrayResult"></param>
-        /// <param name="authorizePO"></param>
-        /// <param name="prayTimesToday"></param>
+        /// <param name="authorize"></param>
         /// <param name="toBase64"></param>
         /// <param name="imgWidth"></param>
         /// <returns></returns>
-        public ApiPrayResult CreatePrayResult(YSUpItem ySUpItem, YSPrayResult ySPrayResult, AuthorizePO authorizePO, int prayTimesToday, bool toBase64, int imgWidth)
+        public ApiPrayResult CreatePrayResult(YSUpItem ySUpItem, YSPrayResult ySPrayResult, AuthorizeDto authorize, bool toBase64, int imgWidth)
         {
             ApiPrayResult apiResult = new ApiPrayResult();
             apiResult.Star5Cost = ySPrayResult.Star5Cost;
             apiResult.PrayCount = ySPrayResult.PrayRecords.Count();
-            apiResult.ApiDailyCallSurplus = authorizePO.DailyCall - prayTimesToday > 0 ? authorizePO.DailyCall - prayTimesToday : 0;
+            apiResult.ApiDailyCallSurplus = authorize.ApiCallSurplus;
             apiResult.Role180Surplus = ySPrayResult.MemberInfo.Role180Surplus;
             apiResult.Role90Surplus = ySPrayResult.MemberInfo.Role180Surplus % 90;
             apiResult.Arm80Surplus = ySPrayResult.MemberInfo.Arm80Surplus;
@@ -191,7 +190,8 @@ namespace GenshinPray.Service.PrayService
             apiResult.Star4Up = ChangeToGoodsVO(ySUpItem.Star4UpList);
             apiResult.Surplus10 = ySPrayResult.Surplus10;
 
-            using Bitmap prayImage = DrawPrayImg(ySPrayResult.Authorize, ySPrayResult.SortPrayRecords, ySPrayResult.MemberInfo);
+            bool withSkin = authorize.Authorize.SkinRate > 0 && RandomHelper.getRandomBetween(1, 100) <= authorize.Authorize.SkinRate;
+            using Bitmap prayImage = DrawPrayImg(ySPrayResult.SortPrayRecords, withSkin, ySPrayResult.MemberInfo.MemberCode);
 
             if (toBase64)
             {
@@ -209,31 +209,63 @@ namespace GenshinPray.Service.PrayService
         }
 
         /// <summary>
-        /// 绘制祈愿结果图片,返回FileInfo对象
+        /// 创建结果集
         /// </summary>
+        /// <param name="generateData"></param>
+        /// <param name="SortPrayRecords"></param>
         /// <param name="authorize"></param>
-        /// <param name="sortPrayRecords"></param>
-        /// <param name="memberInfo"></param>
         /// <returns></returns>
-        protected Bitmap DrawPrayImg(AuthorizePO authorize, YSPrayRecord[] sortPrayRecords, MemberPO memberInfo)
+        public ApiGenerateResult CreateGenerateResult(GenerateDataDto generateData, YSPrayRecord[] SortPrayRecords, AuthorizeDto authorize)
         {
-            if (sortPrayRecords.Count() == 1) return DrawHelper.drawOnePrayImg(authorize, sortPrayRecords.First(), memberInfo);
-            return DrawHelper.drawTenPrayImg(authorize, sortPrayRecords, memberInfo);
+            ApiGenerateResult apiResult = new ApiGenerateResult();
+            apiResult.PrayCount = SortPrayRecords.Count();
+            apiResult.ApiDailyCallSurplus = authorize.ApiCallSurplus;
+            apiResult.Star5Goods = ChangeToGoodsVO(SortPrayRecords.Where(m => m.GoodsItem.RareType == YSRareType.五星).ToArray());
+            apiResult.Star4Goods = ChangeToGoodsVO(SortPrayRecords.Where(m => m.GoodsItem.RareType == YSRareType.四星).ToArray());
+            apiResult.Star3Goods = ChangeToGoodsVO(SortPrayRecords.Where(m => m.GoodsItem.RareType == YSRareType.三星).ToArray());
+            using Bitmap prayImage = DrawPrayImg(SortPrayRecords, generateData.UseSkin, generateData.Uid);
+
+            if (generateData.ToBase64)
+            {
+                apiResult.ImgBase64 = ImageHelper.ToBase64(prayImage);
+            }
+            else
+            {
+                FileInfo prayFileInfo = ImageHelper.saveImageToJpg(prayImage, FilePath.getPrayImgSavePath(), generateData.ImgWidth);
+                apiResult.ImgPath = Path.Combine(prayFileInfo.Directory.Parent.Name, prayFileInfo.Directory.Name, prayFileInfo.Name);
+                apiResult.ImgHttpUrl = SiteConfig.PrayImgHttpUrl.Replace("{imgPath}", $"{prayFileInfo.Directory.Parent.Name}/{prayFileInfo.Directory.Name}/{prayFileInfo.Name}");
+                apiResult.ImgSize = prayFileInfo.Length;
+            }
+
+            return apiResult;
         }
 
-        protected bool CheckIsNew(List<MemberGoodsDto> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
+        /// <summary>
+        /// 绘制祈愿结果图片,返回Bitmap
+        /// </summary>
+        /// <param name="sortPrayRecords"></param>
+        /// <param name="withSkin"></param>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        protected Bitmap DrawPrayImg(YSPrayRecord[] sortPrayRecords, bool withSkin, string uid)
         {
-            bool isOwnedBefore = memberGoods.Where(m => m.GoodsName == checkRecord.GoodsItem.GoodsName).Any();
-            bool isOwnedInRecord = records.Where(m => m != null && m != checkRecord && m.GoodsItem.GoodsName == checkRecord.GoodsItem.GoodsName).Any();
-            return isOwnedBefore == false && isOwnedInRecord == false;
+            if (sortPrayRecords.Count() == 1) return DrawHelper.drawOnePrayImg(sortPrayRecords.First(), withSkin, uid);
+            return DrawHelper.drawTenPrayImg(sortPrayRecords, withSkin, uid);
         }
 
-        protected int GetOwnCountBefore(List<MemberGoodsDto> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
+        /// <summary>
+        /// 获取一个物品的当前已拥有数量
+        /// </summary>
+        /// <param name="memberGoods"></param>
+        /// <param name="records"></param>
+        /// <param name="checkRecord"></param>
+        /// <returns></returns>
+        protected int GetOwnedCount(List<MemberGoodsDto> memberGoods, YSPrayRecord[] records, YSPrayRecord checkRecord)
         {
-            MemberGoodsDto ownGood = memberGoods.Where(m => m.GoodsName == checkRecord.GoodsItem.GoodsName).FirstOrDefault();
-            int ownBefore = ownGood == null ? 0 : ownGood.Count;
-            int ownInRecord = records.Where(m => m != null && m != checkRecord && m.GoodsItem.GoodsName == checkRecord.GoodsItem.GoodsName).Count();
-            return ownBefore + ownInRecord;
+            MemberGoodsDto ownedGood = memberGoods.Where(m => m.GoodsName == checkRecord.GoodsItem.GoodsName).FirstOrDefault();
+            int ownInDatabase = ownedGood == null ? 0 : ownedGood.Count;
+            int ownInRecord = records.Where(m => m != null && m.GoodsItem.GoodsName == checkRecord.GoodsItem.GoodsName).Count();
+            return ownInDatabase + ownInRecord;
         }
 
     }
