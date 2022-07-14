@@ -82,5 +82,13 @@ namespace GenshinPray.Service
             return memberInfo;
         }
 
+        public void ResetSurplus(int authId, string memberCode)
+        {
+            MemberPO memberInfo = GetOrInsert(authId, memberCode, "");
+            memberInfo.ResetSurplus();
+            memberDao.Update(memberInfo);
+        }
+
+
     }
 }

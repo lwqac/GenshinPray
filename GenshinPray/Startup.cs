@@ -8,6 +8,7 @@ using GenshinPray.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,6 +70,8 @@ namespace GenshinPray
             services.AddScoped<MemberGoodsDao, MemberGoodsDao>();
             services.AddScoped<PondGoodsDao, PondGoodsDao>();
             services.AddScoped<PrayRecordDao, PrayRecordDao>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //controller
             services.AddControllers();

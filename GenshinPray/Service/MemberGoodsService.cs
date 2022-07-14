@@ -97,7 +97,10 @@ namespace GenshinPray.Service
             return memberGoodsDao.getPrayRecords(authId, memberCode, rareType, pondType, top);
         }
 
-
+        public int clearMemberGoods(int authId, string memberCode)
+        {
+            return memberGoodsDao.clearMemberGoods(authId, memberCode);
+        }
 
     }
 }

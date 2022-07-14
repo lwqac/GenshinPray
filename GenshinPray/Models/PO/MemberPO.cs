@@ -78,6 +78,19 @@ namespace GenshinPray.Models.PO
             this.FullArm10Surplus = 10;
         }
 
+        public void ResetSurplus()
+        {
+            this.Role180Surplus = 180;
+            this.Role20Surplus = 20;
+            this.Arm80Surplus = 80;
+            this.Arm20Surplus = 20;
+            this.Perm90Surplus = 90;
+            this.Perm10Surplus = 10;
+            this.FullRole90Surplus = 90;
+            this.FullRole10Surplus = 10;
+            this.FullArm80Surplus = 80;
+            this.FullArm10Surplus = 10;
+        }
 
     }
 }

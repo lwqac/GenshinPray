@@ -78,6 +78,11 @@ namespace GenshinPray.Dao
             return Db.Ado.SqlQuery<PrayRecordDto>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, PondType = pondType, Top = top });
         }
 
+        public int clearMemberGoods(int authId, string memberCode)
+        {
+            return Db.Deleteable<MemberGoodsPO>().Where(o => o.AuthId == authId && o.MemberCode == memberCode).ExecuteCommand();
+        }
+
 
     }
 }

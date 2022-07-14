@@ -26,6 +26,7 @@ namespace GenshinPray.Dao
                 DbScoped.SugarScope.CodeFirst.InitTables(typeof(MemberPO));
                 DbScoped.SugarScope.CodeFirst.InitTables(typeof(PondGoodsPO));
                 DbScoped.SugarScope.CodeFirst.InitTables(typeof(PrayRecordPO));
+                DbScoped.SugarScope.CodeFirst.InitTables(typeof(RequestRecordPO));
             }
             catch (Exception ex)
             {

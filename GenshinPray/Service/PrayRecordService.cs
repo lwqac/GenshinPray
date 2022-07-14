@@ -1,6 +1,7 @@
 ﻿using GenshinPray.Dao;
 using GenshinPray.Models.PO;
 using GenshinPray.Type;
+using GenshinPray.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,9 @@ namespace GenshinPray.Service
 
         public int GetPrayTimesToday(int authId)
         {
-            return prayRecordDao.getPrayTimesToday(authId);
+            DateTime startTime = DateTimeHelper.getTodayStart();
+            DateTime endTime = DateTimeHelper.getTodayEnd();
+            return prayRecordDao.getPrayTimes(authId, startTime, endTime);
         }
 
         public PrayRecordPO AddPrayRecord(YSPondType pondType, int authId, string memberCode, int prayCount)
@@ -33,6 +36,10 @@ namespace GenshinPray.Service
             return prayRecordDao.Insert(prayRecord);
         }
 
+        public int ClearPrayRecord(int authId, string memberCode)
+        {
+            return prayRecordDao.clearPrayRecord(authId, memberCode);
+        }
 
     }
 }

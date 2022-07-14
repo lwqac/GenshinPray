@@ -10,6 +10,7 @@ using GenshinPray.Type;
 using GenshinPray.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SqlSugar.IOC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,14 @@ namespace GenshinPray.Controllers.Api
         protected MemberService memberService;
         protected GoodsService goodsService;
         protected MemberGoodsService memberGoodsService;
+        protected PrayRecordService prayRecordService;
 
-        public PrayInfoController(MemberService memberService, GoodsService goodsService, MemberGoodsService memberGoodsService)
+        public PrayInfoController(MemberService memberService, GoodsService goodsService, MemberGoodsService memberGoodsService, PrayRecordService prayRecordService)
         {
             this.memberService = memberService;
             this.goodsService = goodsService;
             this.memberGoodsService = memberGoodsService;
+            this.prayRecordService = prayRecordService;
         }
 
         /// <summary>
@@ -468,6 +471,41 @@ namespace GenshinPray.Controllers.Api
                 return ApiResult.ServerError;
             }
         }
+
+
+        /// <summary>
+        /// 重置一个成员的祈愿记录
+        /// </summary>
+        /// <param name="authorizeDto"></param>
+        /// <param name="memberCode"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
+        public ApiResult ResetPrayRecord([FromForm] AuthorizeDto authorizeDto, string memberCode)
+        {
+            try
+            {
+                DbScoped.SugarScope.BeginTran();
+                AuthorizePO authorizePO = authorizeDto.Authorize;
+                memberGoodsService.clearMemberGoods(authorizePO.Id, memberCode);
+                prayRecordService.ClearPrayRecord(authorizePO.Id, memberCode);
+                memberService.ResetSurplus(authorizePO.Id, memberCode);
+                DbScoped.SugarScope.CommitTran();
+                return ApiResult.Success();
+            }
+            catch (BaseException ex)
+            {
+                DbScoped.SugarScope.RollbackTran();
+                LogHelper.Info(ex);
+                return ApiResult.Error(ex);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex);
+                return ApiResult.ServerError;
+            }
+        }
+
 
         /// <summary>
         /// 修改一个授权码服装出现的概率
