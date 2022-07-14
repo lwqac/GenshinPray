@@ -81,5 +81,42 @@ namespace GenshinPray.Controllers.Api
         }
 
 
+        /// <summary>
+        /// 生成自定义单抽结果图
+        /// </summary>
+        /// <param name="authorizeDto"></param>
+        /// <param name="generateData"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [TypeFilter(typeof(AuthorizeAttribute))]
+        public ApiResult GenerateOne([FromForm] AuthorizeDto authorizeDto, [FromBody] GenerateDataDto generateData)
+        {
+            try
+            {
+                if (generateData == null || generateData.GoodsData.Count == 0) throw new ParamException("参数错误");
+                GoodsData goodsData = generateData.GoodsData.First();
+                string goodsName = goodsData.GoodsName.Trim();
+                GoodsPO dbGoods = goodsService.GetGoodsByName(goodsName);
+                if (dbGoods == null) return new ApiResult(ResultCode.GoodsNotFound, $"找不到名为{goodsName}的物品");
+                YSGoodsItem goodsItem = new YSGoodsItem(dbGoods);
+                int ownedCount = goodsData.OwnedCount + 1;
+                YSPrayRecord prayRecord = new YSPrayRecord(goodsItem, ownedCount, 1);
+                YSPrayRecord[] sortRecords = new YSPrayRecord[] { prayRecord };
+                ApiGenerateResult prayResult = generateService.CreateGenerateResult(generateData, sortRecords, authorizeDto);
+                return ApiResult.Success(prayResult);
+            }
+            catch (BaseException ex)
+            {
+                LogHelper.Info(ex);
+                return ApiResult.Error(ex);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex);
+                return ApiResult.ServerError;
+            }
+        }
+
+
     }
 }

@@ -16,7 +16,7 @@ namespace GenshinPray.Models.DTO
         {
             this.Authorize = Authorize;
             this.ApiCalledToday = apiCalledToday;
-            this.ApiCallSurplus = Authorize.DailyCall - apiCalledToday < 0 ? 0 : Authorize.DailyCall - apiCalledToday;
+            this.ApiCallSurplus = (Authorize.DailyCall - apiCalledToday) < 0 ? 0 : (Authorize.DailyCall - apiCalledToday);
         }
 
 

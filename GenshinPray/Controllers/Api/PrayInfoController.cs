@@ -34,15 +34,15 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 获取当前所有祈愿池的up内容
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetPondInfo([FromForm] AuthorizeDto authorize)
+        public ApiResult GetPondInfo([FromForm] AuthorizeDto authorizeDto)
         {
             try
             {
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 Dictionary<int, YSUpItem> armUpItemDic = DataCache.DefaultArmItem.Merge<int, YSUpItem>(goodsService.LoadArmItem(authorizePO.Id));
                 Dictionary<int, YSUpItem> roleUpItemDic = DataCache.DefaultRoleItem.Merge<int, YSUpItem>(goodsService.LoadRoleItem(authorizePO.Id));
                 Dictionary<int, YSUpItem> permUpItemDic = new Dictionary<int, YSUpItem>() { { 0, DataCache.DefaultPermItem } };
@@ -93,17 +93,17 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 获取成员祈愿详情
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="memberCode"></param>
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetMemberPrayDetail([FromForm] AuthorizeDto authorize, string memberCode)
+        public ApiResult GetMemberPrayDetail([FromForm] AuthorizeDto authorizeDto, string memberCode)
         {
             try
             {
                 checkNullParam(memberCode);
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null) return ApiResult.Success();
                 PrayDetailDto prayDetail = memberGoodsService.GetMemberPrayDetail(authorizePO.Id, memberCode);
@@ -154,17 +154,17 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 获取群内欧气排行
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetLuckRanking([FromForm] AuthorizeDto authorize)
+        public ApiResult GetLuckRanking([FromForm] AuthorizeDto authorizeDto)
         {
             try
             {
                 int top = 20;
                 int days = 7;
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 LuckRankingVO luckRankingVO = memberGoodsService.getLuckRanking(authorizePO.Id, days, top);
                 return ApiResult.Success(luckRankingVO);
             }
@@ -183,7 +183,7 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 定轨武器
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="memberCode"></param>
         /// <param name="goodsName"></param>
         /// <param name="memberName"></param>
@@ -191,13 +191,13 @@ namespace GenshinPray.Controllers.Api
         [HttpGet]
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult SetMemberAssign([FromForm] AuthorizeDto authorize, string memberCode, string goodsName, string memberName = "")
+        public ApiResult SetMemberAssign([FromForm] AuthorizeDto authorizeDto, string memberCode, string goodsName, string memberName = "")
         {
             try
             {
                 int pondIndex = 0;
                 checkNullParam(memberCode, goodsName);
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 GoodsPO goodsInfo = goodsService.GetGoodsByName(goodsName.Trim());
                 if (goodsInfo == null) return ApiResult.GoodsNotFound;
 
@@ -225,17 +225,17 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 获取成员定轨信息
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="memberCode"></param>
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetMemberAssign([FromForm] AuthorizeDto authorize, string memberCode)
+        public ApiResult GetMemberAssign([FromForm] AuthorizeDto authorizeDto, string memberCode)
         {
             try
             {
                 checkNullParam(memberCode);
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null || memberInfo.ArmAssignId == 0) return ApiResult.Success("未找到定轨信息");
                 GoodsPO goodsInfo = goodsService.GetGoodsById(memberInfo.ArmAssignId);
@@ -264,17 +264,17 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 获取成员出货记录
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="memberCode"></param>
         /// <returns></returns>
         [HttpGet]
         [TypeFilter(typeof(AuthorizeAttribute))]
-        public ApiResult GetMemberPrayRecords([FromForm] AuthorizeDto authorize, string memberCode)
+        public ApiResult GetMemberPrayRecords([FromForm] AuthorizeDto authorizeDto, string memberCode)
         {
             try
             {
                 checkNullParam(memberCode);
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 MemberPO memberInfo = memberService.GetByCode(authorizePO.Id, memberCode);
                 if (memberInfo == null) return ApiResult.Success();
                 List<PrayRecordDto> allStar5List = memberGoodsService.getPrayRecords(authorizePO.Id, memberCode, YSRareType.五星, 20);
@@ -318,19 +318,19 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 设定角色池
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="rolePond"></param>
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult SetRolePond([FromForm] AuthorizeDto authorize, [FromBody] RolePondDto rolePond)
+        public ApiResult SetRolePond([FromForm] AuthorizeDto authorizeDto, [FromBody] RolePondDto rolePond)
         {
             try
             {
                 if (rolePond.PondIndex < 0 || rolePond.PondIndex > 10) throw new ParamException("参数错误");
                 if (rolePond.UpItems == null || rolePond.UpItems.Count == 0 || rolePond.UpItems.Count > 4) throw new ParamException("参数错误");
 
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 List<GoodsPO> goodsList = new List<GoodsPO>();
                 foreach (string item in rolePond.UpItems)
                 {
@@ -368,18 +368,18 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 设定角色池
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="armPond"></param>
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult SetArmPond([FromForm] AuthorizeDto authorize, [FromBody] ArmPondDTO armPond)
+        public ApiResult SetArmPond([FromForm] AuthorizeDto authorizeDto, [FromBody] ArmPondDTO armPond)
         {
             try
             {
                 if (armPond.UpItems == null || armPond.UpItems.Count == 0 || armPond.UpItems.Count > 7) throw new ParamException("参数错误");
 
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 List<GoodsPO> goodsList = new List<GoodsPO>();
                 foreach (string item in armPond.UpItems)
                 {
@@ -418,15 +418,15 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 清除一个授权码配置的所有角色池
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult ResetRolePond([FromForm] AuthorizeDto authorize)
+        public ApiResult ResetRolePond([FromForm] AuthorizeDto authorizeDto)
         {
             try
             {
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 goodsService.ClearPondGoods(authorizePO.Id, YSPondType.角色);
                 return ApiResult.Success();
             }
@@ -445,15 +445,15 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 清除一个授权码配置的所有武器池
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult ResetArmPond([FromForm] AuthorizeDto authorize)
+        public ApiResult ResetArmPond([FromForm] AuthorizeDto authorizeDto)
         {
             try
             {
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 goodsService.ClearPondGoods(authorizePO.Id, YSPondType.武器);
                 return ApiResult.Success();
             }
@@ -472,17 +472,17 @@ namespace GenshinPray.Controllers.Api
         /// <summary>
         /// 修改一个授权码服装出现的概率
         /// </summary>
-        /// <param name="authorize"></param>
+        /// <param name="authorizeDto"></param>
         /// <param name="rare">0~100</param>
         /// <returns></returns>
         [HttpPost]
         [TypeFilter(typeof(AuthorizeAttribute), Arguments = new object[] { PublicLimit.Yes })]
-        public ApiResult SetSkinRate([FromForm] AuthorizeDto authorize, int rare)
+        public ApiResult SetSkinRate([FromForm] AuthorizeDto authorizeDto, int rare)
         {
             try
             {
                 if (rare < 0 || rare > 100) throw new ParamException("参数错误");
-                AuthorizePO authorizePO = authorize.Authorize;
+                AuthorizePO authorizePO = authorizeDto.Authorize;
                 goodsService.UpdateSkinRate(authorizePO.Id, rare);
                 return ApiResult.Success();
             }
