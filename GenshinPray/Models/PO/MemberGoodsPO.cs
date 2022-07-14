@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace GenshinPray.Models.PO
 {
     [SugarTable("member_goods")]
+    [SugarIndex("index_mg_MemberCode", nameof(MemberGoodsPO.MemberCode), OrderByType.Asc)]
     public class MemberGoodsPO : BasePO
     {
         [SugarColumn(IsNullable = false, ColumnDescription = "授权码ID")]
