@@ -151,6 +151,7 @@ namespace GenshinPray
             SiteConfig.PrayImgSavePath = Configuration.GetSection("PrayImgSavePath").Value;
             SiteConfig.PrayMaterialSavePath = Configuration.GetSection("PrayMaterialSavePath").Value;
             SiteConfig.PrayImgHttpUrl = Configuration.GetSection("PrayImgHttpUrl").Value;
+            SiteConfig.PublicAuthCode = Configuration.GetSection("PublicAuthCode").Value;
         }
 
     }

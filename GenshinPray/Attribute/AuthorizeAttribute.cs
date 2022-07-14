@@ -39,7 +39,16 @@ namespace GenshinPray.Attribute
                 context.Result = new JsonResult(ApiResult.Unauthorized);
                 return;
             }
+
             authCode = authCode.Trim();
+            if (PublicLimit == PublicLimit.Yes && authCode == SiteConfig.PublicAuthCode && string.IsNullOrWhiteSpace(SiteConfig.PublicAuthCode) == false)
+            {
+                context.HttpContext.Response.ContentType = "application/json";
+                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                context.Result = new JsonResult(ApiResult.PermissionDenied);
+                return;
+            }
+
             AuthorizePO authorize = authorizeService.GetAuthorize(authCode);
             if (authorize == null || authorize.IsDisable || authorize.ExpireDate <= DateTime.Now)
             {
@@ -48,13 +57,7 @@ namespace GenshinPray.Attribute
                 context.Result = new JsonResult(ApiResult.Unauthorized);
                 return;
             }
-            if (PublicLimit == PublicLimit.Yes && authCode == SiteConfig.PublicAuthCode)
-            {
-                context.HttpContext.Response.ContentType = "application/json";
-                context.HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                context.Result = new JsonResult(ApiResult.PermissionDenied);
-                return;
-            }
+            
             int apiCalledToday = requestRecordService.getRequestTimesToday(authorize.Id);
             if (PrayLimit == PrayLimit.Yes && apiCalledToday >= authorize.DailyCall)
             {
