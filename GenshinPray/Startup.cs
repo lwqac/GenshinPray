@@ -63,13 +63,18 @@ namespace GenshinPray
             services.AddScoped<MemberGoodsService, MemberGoodsService>();
             services.AddScoped<MemberService, MemberService>();
             services.AddScoped<PrayRecordService, PrayRecordService>();
+            services.AddScoped<RequestRecordService, RequestRecordService>();
             services.AddScoped<GenerateService, GenerateService>();
+
             services.AddScoped<AuthorizeDao, AuthorizeDao>();
             services.AddScoped<GoodsDao, GoodsDao>();
             services.AddScoped<MemberDao, MemberDao>();
             services.AddScoped<MemberGoodsDao, MemberGoodsDao>();
             services.AddScoped<PondGoodsDao, PondGoodsDao>();
+            services.AddScoped<RequestRecordDao, RequestRecordDao>();
             services.AddScoped<PrayRecordDao, PrayRecordDao>();
+
+            services.AddScoped<AuthorizeAttribute>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

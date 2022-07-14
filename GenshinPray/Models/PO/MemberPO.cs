@@ -90,6 +90,9 @@ namespace GenshinPray.Models.PO
             this.FullRole10Surplus = 10;
             this.FullArm80Surplus = 80;
             this.FullArm10Surplus = 10;
+            this.ArmAssignId = 0;
+            this.ArmAssignValue = 0;
+            this.TotalPrayTimes = 0;
         }
 
     }

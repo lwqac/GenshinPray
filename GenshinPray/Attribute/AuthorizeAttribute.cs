@@ -14,17 +14,17 @@ namespace GenshinPray.Attribute
 {
     public class AuthorizeAttribute : ActionFilterAttribute
     {
+        private IHttpContextAccessor httpContextAccessor;
         private AuthorizeService authorizeService;
         private RequestRecordService requestRecordService;
-        private HttpContextAccessor httpContextAccessor;
         private PrayLimit PrayLimit = PrayLimit.No;
         private PublicLimit PublicLimit = PublicLimit.No;
 
-        public AuthorizeAttribute(HttpContextAccessor httpContextAccessor, AuthorizeService authorizeService, RequestRecordService requestRecordService, PrayLimit prayLimit = PrayLimit.No, PublicLimit publicLimit = PublicLimit.No)
+        public AuthorizeAttribute(IHttpContextAccessor httpContextAccessor, AuthorizeService authorizeService, RequestRecordService requestRecordService, PrayLimit prayLimit = PrayLimit.No, PublicLimit publicLimit = PublicLimit.No)
         {
+            this.httpContextAccessor = httpContextAccessor;
             this.authorizeService = authorizeService;
             this.requestRecordService = requestRecordService;
-            this.httpContextAccessor = httpContextAccessor;
             this.PrayLimit = prayLimit;
             this.PublicLimit = publicLimit;
         }
