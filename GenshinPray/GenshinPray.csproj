@@ -17,18 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Service\BasePrayService.cs~RFf64f1c6.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="JWT" Version="8.2.3" />
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
-    <PackageReference Include="Quartz" Version="3.3.3" />
-    <PackageReference Include="SqlSugar.IOC" Version="1.8.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.0.9.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <PackageReference Include="Quartz" Version="3.4.0" />
+    <PackageReference Include="SqlSugar.IOC" Version="1.9.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.2.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

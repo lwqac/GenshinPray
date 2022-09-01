@@ -5,21 +5,17 @@ using GenshinPray.Service;
 using GenshinPray.Service.PrayService;
 using GenshinPray.Timer;
 using GenshinPray.Util;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SqlSugar.IOC;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace GenshinPray
 {
@@ -51,7 +47,6 @@ namespace GenshinPray
             new DBClient().CreateDB();
             LogHelper.Info($"数据库初始化完毕...");
 
-
             //依赖注入
             services.AddScoped<ArmPrayService, ArmPrayService>();
             services.AddScoped<PermPrayService, PermPrayService>();
@@ -80,22 +75,6 @@ namespace GenshinPray
 
             //controller
             services.AddControllers();
-
-            //jwt
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,//是否验证Issuer
-                    ValidateAudience = true,//是否验证Audience
-                    ValidateLifetime = true,//是否验证失效时间
-                    ClockSkew = TimeSpan.FromSeconds(30),
-                    ValidateIssuerSigningKey = true,//是否验证SecurityKey
-                    ValidIssuer = SiteConfig.JWTIssuer,//Issuer，这两项和前面签发jwt的设置一致
-                    ValidAudience = SiteConfig.JWTAudience,//Audience
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SiteConfig.JWTSecurityKey))//拿到SecurityKey
-                };
-            });
 
             //Quartz
             LogHelper.Info($"正在初始化定时任务...");
