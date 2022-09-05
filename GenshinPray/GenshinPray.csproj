@@ -17,10 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Quartz" Version="3.4.0" />
     <PackageReference Include="SqlSugar.IOC" Version="1.9.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.2.4" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.2.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.3" />
   </ItemGroup>

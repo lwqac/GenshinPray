@@ -25,12 +25,13 @@ namespace GenshinPray.Service
             return prayRecordDao.getPrayTimes(authId, startTime, endTime);
         }
 
-        public PrayRecordPO AddPrayRecord(YSPondType pondType, int authId, string memberCode, int prayCount)
+        public PrayRecordPO AddPrayRecord(YSPondType pondType, int authId, int pondIndex, string memberCode, int prayCount)
         {
             PrayRecordPO prayRecord = new PrayRecordPO();
             prayRecord.AuthId = authId;
             prayRecord.MemberCode = memberCode;
             prayRecord.PondType = pondType;
+            prayRecord.PondIndex = pondIndex;
             prayRecord.PrayCount = prayCount;
             prayRecord.CreateDate = DateTime.Now;
             return prayRecordDao.Insert(prayRecord);

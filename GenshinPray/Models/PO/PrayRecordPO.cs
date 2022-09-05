@@ -20,6 +20,9 @@ namespace GenshinPray.Models.PO
         [SugarColumn(IsNullable = false, ColumnDescription = "蛋池")]
         public YSPondType PondType { get; set; }
 
+        [SugarColumn(IsNullable = false, ColumnDescription = "蛋池编号")]
+        public int PondIndex { get; set; }
+
         [SugarColumn(IsNullable = false, ColumnDescription = "祈愿次数")]
         public int PrayCount { get; set; }
 

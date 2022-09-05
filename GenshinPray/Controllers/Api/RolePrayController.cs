@@ -59,7 +59,7 @@ namespace GenshinPray.Controllers.Api
                     List<MemberGoodsDto> memberGoods = goodsService.GetMemberGoods(authorizePO.Id, memberCode);
                     ySPrayResult = basePrayService.GetPrayResult(authorizePO, memberInfo, ysUpItem, memberGoods, prayCount);
                     memberService.UpdateMember(memberInfo);//更新保底信息
-                    prayRecordService.AddPrayRecord(YSPondType.角色, authorizePO.Id, memberCode, prayCount);//添加调用记录
+                    prayRecordService.AddPrayRecord(YSPondType.角色, authorizePO.Id, pondIndex, memberCode, prayCount);//添加调用记录
                     memberGoodsService.AddMemberGoods(ySPrayResult, memberGoods, YSPondType.角色, authorizePO.Id, memberCode);//添加成员出货记录
                     DbScoped.SugarScope.CommitTran();
                 }
@@ -115,7 +115,7 @@ namespace GenshinPray.Controllers.Api
                     List<MemberGoodsDto> memberGoods = goodsService.GetMemberGoods(authorizePO.Id, memberCode);
                     ySPrayResult = basePrayService.GetPrayResult(authorizePO, memberInfo, ysUpItem, memberGoods, prayCount);
                     memberService.UpdateMember(memberInfo);//更新保底信息
-                    prayRecordService.AddPrayRecord(YSPondType.角色, authorizePO.Id, memberCode, prayCount);//添加调用记录
+                    prayRecordService.AddPrayRecord(YSPondType.角色, authorizePO.Id, pondIndex, memberCode, prayCount);//添加调用记录
                     memberGoodsService.AddMemberGoods(ySPrayResult, memberGoods, YSPondType.角色, authorizePO.Id, memberCode);//添加成员出货记录
                     DbScoped.SugarScope.CommitTran();
                 }
