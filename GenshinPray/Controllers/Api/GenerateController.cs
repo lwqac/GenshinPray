@@ -56,7 +56,10 @@ namespace GenshinPray.Controllers.Api
 
                 List<YSPrayRecord> star5Records = prayRecords.Where(o => o.GoodsItem.RareType == YSRareType.五星).ToList();
                 List<YSPrayRecord> star4Records = prayRecords.Where(o => o.GoodsItem.RareType == YSRareType.四星).ToList();
+                List<YSPrayRecord> star3Records = prayRecords.Where(o => o.GoodsItem.RareType == YSRareType.三星).ToList();
+                if (prayRecords.Count > 10) throw new ParamException("最多包含十个物品");
                 if (star5Records.Count < 1 && star4Records.Count < 1) throw new ParamException("必须包含一个或多个五星或者四星物品");
+                if (star3Records.Count < 1 && prayRecords.Count >= 10) throw new ParamException("至少包含一个三星物品");
 
                 while (prayRecords.Count < 10)
                 {
@@ -64,7 +67,7 @@ namespace GenshinPray.Controllers.Api
                     prayRecords.Add(new YSPrayRecord(randomItem, 2, 0));
                 }
 
-                YSPrayRecord[] sortRecords = generateService.SortRecords(prayRecords.ToArray());
+                YSPrayRecord[] sortRecords = generateService.SortRecords(prayRecords.ToArray()).Take(10).ToArray();
                 ApiGenerateResult prayResult = generateService.CreateGenerateResult(generateData, sortRecords, authorizeDto);
                 return ApiResult.Success(prayResult);
             }
