@@ -18,13 +18,6 @@ namespace GenshinPray.Service
             this.prayRecordDao = prayRecordDao;
         }
 
-        public int GetPrayTimesToday(int authId)
-        {
-            DateTime startTime = DateTimeHelper.getTodayStart();
-            DateTime endTime = DateTimeHelper.getTodayEnd();
-            return prayRecordDao.getPrayTimes(authId, startTime, endTime);
-        }
-
         public PrayRecordPO AddPrayRecord(YSPondType pondType, int authId, int pondIndex, string memberCode, int prayCount)
         {
             PrayRecordPO prayRecord = new PrayRecordPO();

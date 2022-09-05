@@ -11,6 +11,13 @@ namespace GenshinPray.Dao
 {
     public class MemberGoodsDao : DbContext<MemberGoodsPO>
     {
+        /// <summary>
+        /// 统计某个成员某个星级物品的出货数量
+        /// </summary>
+        /// <param name="authId"></param>
+        /// <param name="memberCode"></param>
+        /// <param name="rareType"></param>
+        /// <returns></returns>
         public int CountByMember(int authId, string memberCode, YSRareType rareType)
         {
             StringBuilder sqlBuilder = new StringBuilder();
@@ -20,6 +27,14 @@ namespace GenshinPray.Dao
             return Db.Ado.SqlQuery<int>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType }).First();
         }
 
+        /// <summary>
+        ///  统计某个成员某个蛋池类型某个星级物品的出货数量
+        /// </summary>
+        /// <param name="authId"></param>
+        /// <param name="memberCode"></param>
+        /// <param name="pondType"></param>
+        /// <param name="rareType"></param>
+        /// <returns></returns>
         public int CountByMember(int authId, string memberCode, YSPondType pondType, YSRareType rareType)
         {
             StringBuilder sqlBuilder = new StringBuilder();
@@ -58,6 +73,14 @@ namespace GenshinPray.Dao
             return Db.Ado.SqlQuery<LuckRankingDto>(sqlBuilder.ToString(), new { AuthId = authId, Top = top, RareType = rareType, StartDate = startDate, EndDate = endDate });
         }
 
+        /// <summary>
+        /// 读取出货记录
+        /// </summary>
+        /// <param name="authId"></param>
+        /// <param name="memberCode"></param>
+        /// <param name="rareType"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         public List<PrayRecordDto> getPrayRecords(int authId, string memberCode, YSRareType rareType, int top)
         {
             StringBuilder sqlBuilder = new StringBuilder();
@@ -68,6 +91,15 @@ namespace GenshinPray.Dao
             return Db.Ado.SqlQuery<PrayRecordDto>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, Top = top });
         }
 
+        /// <summary>
+        /// 读取出货记录
+        /// </summary>
+        /// <param name="authId"></param>
+        /// <param name="memberCode"></param>
+        /// <param name="rareType"></param>
+        /// <param name="pondType"></param>
+        /// <param name="top"></param>
+        /// <returns></returns>
         public List<PrayRecordDto> getPrayRecords(int authId, string memberCode, YSRareType rareType, YSPondType pondType, int top)
         {
             StringBuilder sqlBuilder = new StringBuilder();
@@ -78,6 +110,12 @@ namespace GenshinPray.Dao
             return Db.Ado.SqlQuery<PrayRecordDto>(sqlBuilder.ToString(), new { AuthId = authId, MemberCode = memberCode, RareType = rareType, PondType = pondType, Top = top });
         }
 
+        /// <summary>
+        /// 清除出货记录
+        /// </summary>
+        /// <param name="authId"></param>
+        /// <param name="memberCode"></param>
+        /// <returns></returns>
         public int clearMemberGoods(int authId, string memberCode)
         {
             return Db.Deleteable<MemberGoodsPO>().Where(o => o.AuthId == authId && o.MemberCode == memberCode).ExecuteCommand();

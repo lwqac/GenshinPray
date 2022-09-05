@@ -119,7 +119,7 @@ namespace GenshinPray
             //加载默认蛋池数据到内存
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                scope.ServiceProvider.GetRequiredService<GoodsService>().LoadYSPrayItem();
+                scope.ServiceProvider.GetRequiredService<GoodsService>().LoadPrayItem();
             }
         }
 

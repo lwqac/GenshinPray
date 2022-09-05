@@ -58,7 +58,7 @@ namespace GenshinPray.Service
         /// <summary>
         /// 加载蛋池数据到内存
         /// </summary>
-        public void LoadYSPrayItem()
+        public void LoadPrayItem()
         {
             DataCache.ArmStar3PermList = ChangeToYSGoodsItem(goodsDao.getPermGoods(YSGoodsType.武器, YSRareType.三星));//三星常驻武器
             DataCache.ArmStar4PermList = ChangeToYSGoodsItem(goodsDao.getPermGoods(YSGoodsType.武器, YSRareType.四星));//四星常驻武器
@@ -198,7 +198,7 @@ namespace GenshinPray.Service
             List<YSGoodsItem> NonUpList = new List<YSGoodsItem>();
             foreach (YSGoodsItem goodsItem in AllList)
             {
-                if (UpList.Where(m => m.GoodsName == goodsItem.GoodsName).Count() > 0) continue;
+                if (UpList.Where(m => m.GoodsName == goodsItem.GoodsName).Any()) continue;
                 NonUpList.Add(goodsItem);
             }
             return NonUpList;
@@ -288,14 +288,14 @@ namespace GenshinPray.Service
         }
 
         /// <summary>
-        /// 清理蛋池
+        /// 设置蛋池
         /// </summary>
         /// <param name="goods"></param>
         /// <param name="authId"></param>
         /// <param name="pondType"></param>
         /// <param name="pondIndex"></param>
         /// <returns></returns>
-        public void AddPondGoods(List<GoodsPO> goods, int authId, YSPondType pondType, int pondIndex)
+        public void InsertPondGoods(List<GoodsPO> goods, int authId, YSPondType pondType, int pondIndex)
         {
             foreach (var good in goods)
             {

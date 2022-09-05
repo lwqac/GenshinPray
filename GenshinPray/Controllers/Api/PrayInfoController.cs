@@ -351,8 +351,8 @@ namespace GenshinPray.Controllers.Api
                 if (star4Goods.Count > 3) throw new ParamException("只能指定三个四星角色");
 
                 goodsService.ClearPondGoods(authorizePO.Id, YSPondType.角色, rolePond.PondIndex);
-                goodsService.AddPondGoods(star5Goods, authorizePO.Id, YSPondType.角色, rolePond.PondIndex);
-                goodsService.AddPondGoods(star4Goods, authorizePO.Id, YSPondType.角色, rolePond.PondIndex);
+                goodsService.InsertPondGoods(star5Goods, authorizePO.Id, YSPondType.角色, rolePond.PondIndex);
+                goodsService.InsertPondGoods(star4Goods, authorizePO.Id, YSPondType.角色, rolePond.PondIndex);
 
                 return ApiResult.Success();
             }
@@ -400,8 +400,8 @@ namespace GenshinPray.Controllers.Api
                 if (star4Goods.Count > 5) throw new ParamException("只能指定五个四星武器");
 
                 goodsService.ClearPondGoods(authorizePO.Id, YSPondType.武器, 0);
-                goodsService.AddPondGoods(star5Goods, authorizePO.Id, YSPondType.武器, 0);
-                goodsService.AddPondGoods(star4Goods, authorizePO.Id, YSPondType.武器, 0);
+                goodsService.InsertPondGoods(star5Goods, authorizePO.Id, YSPondType.武器, 0);
+                goodsService.InsertPondGoods(star4Goods, authorizePO.Id, YSPondType.武器, 0);
 
                 return ApiResult.Success();
             }
