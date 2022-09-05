@@ -143,7 +143,6 @@ namespace GenshinPray.Service.PrayService
             YSPrayRecord[] prayRecords = GetPrayRecord(memberInfo, ysUpItem, assignGoodsItem, memberGoods, prayCount);
             YSPrayRecord[] sortPrayRecords = SortRecords(prayRecords);
 
-            memberInfo.TotalPrayTimes += prayCount;
             if (assignGoodsItem == null || memberInfo.ArmAssignValue > 2)
             {
                 //当命定值溢出或者定轨项目不在本期5星up内时,重置命定值

@@ -54,9 +54,6 @@ namespace GenshinPray.Models.PO
         [SugarColumn(IsNullable = false, DefaultValue = "10", ColumnDescription = "全武器池剩余多少发十连保底")]
         public int FullArm10Surplus { get; set; }
 
-        [SugarColumn(IsNullable = false, DefaultValue = "0", ColumnDescription = "总祈愿次数")]
-        public int TotalPrayTimes { get; set; }
-
         public MemberPO()
         {
         }
@@ -92,7 +89,6 @@ namespace GenshinPray.Models.PO
             this.FullArm10Surplus = 10;
             this.ArmAssignId = 0;
             this.ArmAssignValue = 0;
-            this.TotalPrayTimes = 0;
         }
 
     }
