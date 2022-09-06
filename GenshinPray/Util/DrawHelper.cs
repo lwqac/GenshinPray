@@ -261,7 +261,7 @@ namespace GenshinPray.Util
             {
                 using Image imgRole = new Bitmap(FilePath.getYSSmallRoleImgPath(goodsItem, withSkin));
                 using Image imgResize = new Bitmap(imgRole, imgRole.Width, imgRole.Height);
-                bgGraphics.DrawImage(imgResize, indexX - 1, indexY + 5, new Rectangle(-3, 0, imgResize.Width, imgResize.Height), GraphicsUnit.Pixel);
+                bgGraphics.DrawImage(imgResize, indexX - 1, indexY + 4, new Rectangle(-3, 0, imgResize.Width, imgResize.Height), GraphicsUnit.Pixel);
             }
             if (goodsItem.GoodsType == YSGoodsType.武器)
             {
